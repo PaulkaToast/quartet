@@ -1,11 +1,66 @@
 //variables//
 
 //Classes//
+class Circle {
 
+    constructor(x, y) {
+        this.radius = 30; //radius 
+        this.x = 40 + x * 80; //x cordinate
+        this.y = 40 + y * 70; //y cordinate
+        this.r = 0; //red
+        this.b = Math.floor(255 - 25 * x); //blue
+        this.g = Math.floor(255 - 25 * y); //green
+        this.a = 0.5; //aplha
+        this.af = 0.1; //aplha fill
+        this.clicked = false;
+
+        this.shape = new createjs.Shape();
+        this.shape.x = this.x;
+        this.shape.y = this.y;
+        stage.addChild(this.shape);
+        this.shape.on("click", this.onClick.bind(this));
+        this.shape.on("mouseover", this.mouseOver.bind(this));
+        this.shape.on("mouseout", this.mouseOut.bind(this));
+    }
+
+    draw() {
+        this.shape.graphics.clear().beginStroke('rgba('
+            + this.r + ','              
+            + this.g + ',' 
+            + this.b + ','
+            + this.a + ')')
+        .beginFill('rgba('
+            + this.r + ','              
+            + this.g + ',' 
+            + this.b + ','
+            + this.af + ')')
+        .drawCircle(0, 0, this.radius);
+    }
+    drawAndUpdate(){
+        this.draw();
+        stage.update();
+    }
+    onClick(e) {
+        if (!this.clicked) {
+            this.a = 1;
+        } else {
+            this.a = 0.5;
+        }
+        this.clicked = !this.clicked;
+        this.drawAndUpdate();
+    }
+    mouseOver(e) {
+        this.af = 0.3;
+        this.drawAndUpdate();
+    }
+    mouseOut(e) {
+        this.af = 0.1;
+        this.drawAndUpdate();
+    }
+}
 
 //functions//
 function initcanvas() {
-
     canvas = document.getElementById('tutorial');
     ctx = canvas.getContext('2d');
     ctx.canvas.width  = window.innerWidth;
@@ -15,22 +70,16 @@ function initcanvas() {
 }
 
 function draw() {
-   
-    var stage = new createjs.Stage(canvas);
+    stage = new createjs.Stage(canvas);
+    stage.enableMouseOver(30);
     var list = new Array();
    
     for (var i = 0; i < 8; i++) {
-      for (var j = 0; j < 8; j++) {
-        
-        var curr = new createjs.Shape();
-        curr.graphics.beginStroke('rgba(0,'+ Math.floor(255 - 25 * i) + ',' 
-                                        + Math.floor(255 - 25 * j) + ','
-                                        + '0.5)').drawCircle(0, 0, 30);
-        curr.x = 40 + j *70;
-        curr.y = 40 + i *80;
-        stage.addChild(curr);
-        list.push(curr);
-        stage.update();
+      for (var j = 0; j < 8; j++) {  
+        var curr = new Circle(i, j);
+        curr.draw();
+        list.push(curr); 
       }
     }
+    stage.update();
 }
