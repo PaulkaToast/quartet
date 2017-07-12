@@ -5,11 +5,11 @@ class Circle {
 
     constructor(x, y) {
         this.radius = 30; //radius 
-        this.x = 40 + x * 80; //x cordinate
-        this.y = 40 + y * 70; //y cordinate
+        this.x = 40 + x * 70; //x cordinate
+        this.y = 40 + y * 80; //y cordinate
         this.r = 0; //red
         this.b = Math.floor(255 - 25 * x); //blue
-        this.g = Math.floor(255 - 25 * y); //green
+        this.g = Math.floor(255 - 5 * y); //green
         this.a = 0.5; //aplha
         this.af = 0.1; //aplha fill
         this.clicked = false;
@@ -24,16 +24,18 @@ class Circle {
     }
 
     draw() {
-        this.shape.graphics.clear().beginStroke('rgba('
-            + this.r + ','              
-            + this.g + ',' 
-            + this.b + ','
-            + this.a + ')')
+        this.shape.graphics.clear()
         .beginFill('rgba('
             + this.r + ','              
             + this.g + ',' 
             + this.b + ','
             + this.af + ')')
+        .setStrokeStyle(3, 'round', 'round')
+        .beginStroke('rgba('
+            + this.r + ','              
+            + this.g + ',' 
+            + this.b + ','
+            + this.a + ')')
         .drawCircle(0, 0, this.radius);
     }
     drawAndUpdate(){
