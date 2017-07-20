@@ -63,12 +63,19 @@ class Circle {
 }
 
 //functions//
-function initcanvas() {
+function initCanvas() {
     canvas = document.getElementById('tutorial');
     ctx = canvas.getContext('2d');
     ctx.canvas.width  = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
 
+    draw();
+}
+function reInitCanvas() {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+    
     draw();
 }
 
