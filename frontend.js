@@ -3,13 +3,13 @@
 //Classes//
 class Circle {
 
-    constructor(x, y, cSize) {
+    constructor(i, j, cSize) {
         this.radius = 30*(cSize/570); //radius
-        this.x = (40 + x * 70)*(cSize/570); //x cordinate
-        this.y = (40 + y * 70)*(cSize/570); //y cordinate
+        this.x = (40 + i * 70)*(cSize/570); //x cordinate
+        this.y = (40 + j * 70)*(cSize/570); //y cordinate
         this.r = 0; //red
-        this.b = Math.floor(255 - 25 * x); //blue
-        this.g = Math.floor(255 - 5 * y); //green
+        this.b = Math.floor(255 - 25 * i); //blue
+        this.g = Math.floor(255 - 5 * j); //green
         this.a = 0.5; //aplha
         this.af = 0.1; //aplha fill
         this.cSize = cSize;
@@ -45,19 +45,19 @@ class Circle {
     }
     onClick(e) {
         if (!this.clicked) {
-            this.a = 1;
+            this.af = 0.5;
         } else {
-            this.a = 0.5;
+            this.af = 0.1;
         }
         this.clicked = !this.clicked;
         this.drawAndUpdate();
     }
     mouseOver(e) {
-        this.af = 0.3;
+        this.a = 1;
         this.drawAndUpdate();
     }
     mouseOut(e) {
-        this.af = 0.1;
+        this.a = 0.5;
         this.drawAndUpdate();
     }
 }
@@ -75,7 +75,7 @@ function reInitCanvas() {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-    
+
     draw();
 }
 
