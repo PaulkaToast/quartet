@@ -1,5 +1,5 @@
 //variables//
-
+speed = 10;
 //Classes//
 class PauseButton {
 
@@ -65,6 +65,7 @@ class PauseButton {
         stop.unclick();
         this.clicked = !this.clicked;
         this.drawAndUpdate();
+        line.drawAndUpdate();
     }
     mouseOver(e) {
         this.a = 1;
@@ -137,6 +138,7 @@ class StopButton {
         pause.unclick();
         this.clicked = !this.clicked;
         this.drawAndUpdate();
+        line.drawAndUpdate();
     }
     mouseOver(e) {
         this.a = 1;
@@ -212,6 +214,7 @@ class PlayButton {
         pause.unclick();
         this.clicked = !this.clicked;
         this.drawAndUpdate();
+        line.drawAndUpdate();
     }
     mouseOver(e) {
         this.a = 1;
@@ -285,6 +288,61 @@ class Circle {
         this.drawAndUpdate();
     }
 }
+class Line {
+
+    constructor(cSize) {
+        this.x = 0; //x cordinate
+        this.y = 0; //y cordinate
+        this.length = 560 * (cSize/650);
+        this.r = 255; //red
+        this.b = 0; //blue
+        this.g = 0; //green
+        this.a = 0.5; //aplha fill
+        this.cSize = cSize;
+        this.moving = false;
+
+        this.shape = new createjs.Shape();
+        this.shape.x = this.x;
+        this.shape.y = this.y;
+        stage.addChild(this.shape);
+
+    }
+
+    draw() {
+      if(stop.clicked) {
+          this.r = 247;
+          this.b = 0;
+          this.g = 0;
+          this.x = 0;
+      }
+      if (play.clicked) {
+          this.r = 0;
+          this.b = 27;
+          this.g = 237;
+      }
+      if (pause.clicked) {
+          this.r = 247;
+          this.b = 0;
+          this.g = 239;
+      }
+      this.shape.graphics.clear()
+      .setStrokeStyle(15*(this.cSize/650), 'round', 'round')
+      .beginStroke('rgba('
+          + this.r + ','
+          + this.g + ','
+          + this.b + ','
+          + this.a + ')')
+      .moveTo(this.x,this.y)
+      .lineTo(this.x, this.length)
+      .endStroke();
+    }
+    drawAndUpdate(){
+        this.draw();
+        stage.update();
+    }
+
+}
+
 
 //functions//
 function initCanvas() {
@@ -302,12 +360,24 @@ function reInitCanvas() {
 
     draw();
 }
+function tick(e) {
+    if(play.clicked){
+        if(line.x < (560 * (cSize/650))) {
+            line.x = line.x + speed*(cSize/650);
+            line.draw();
+            stage.update();
+        } else {
+          line.x = 0;
+        }
+    }
+
+}
 
 function draw() {
     stage = new createjs.Stage(canvas);
     stage.enableMouseOver(30);
     var list = new Array();
-    var cSize = 0;
+    cSize = 0;
     if( ctx.canvas.width > ctx.canvas.height){
       cSize = ctx.canvas.height;
     }else{
@@ -327,6 +397,9 @@ function draw() {
     stop.draw();
     pause = new PauseButton(cSize);
     pause.draw();
+    line = new Line(cSize);
+    line.draw();
+    createjs.Ticker.addEventListener("tick", tick);
 
     stage.update();
 }
