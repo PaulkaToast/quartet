@@ -12,6 +12,22 @@ let line;
 let stop;
 let cSize;
 //Classes//
+class Color {
+    constructor(r, g, b, a) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+
+    setAlpha(newAlpha) {
+        return new Color(this.r, this.g, this.b, newAlpha);
+    }
+
+    toString() {
+        return 'rgba(' + this.r + ',' + this.g + ',' + this.b + ',' + this.a + ')';
+    }
+}
 class PauseButton {
 
     constructor(cSize) {
@@ -19,11 +35,10 @@ class PauseButton {
       this.y = cSize - 70*(cSize/650);
       this.length = 51*(cSize/650);
       this.width = 17*(cSize/650);
-      this.r = 247;
-      this.b = 0;
-      this.g = 239;
-      this.a = 0.5; //aplha
-      this.af = 0.1; //aplha fill
+      this.color = new Color(247, 239, 0, 0.5);
+
+      this.alphaStroke = 0.5;
+      this.alphaFill = 0.1; //aplha fill
       this.cSize = cSize;
       this.clicked = false;
 
@@ -37,23 +52,13 @@ class PauseButton {
     }
     draw() {
         this.shape.graphics.clear()
-        .beginFill('rgba('
-            + this.r + ','
-            + this.g + ','
-            + this.b + ','
-            + this.af + ')')
+        .beginFill(this.color.setAlpha(this.alphaFill).toString())
         .setStrokeStyle(3*(this.cSize/650), 'round', 'round')
-        .beginStroke('rgba('
-            + this.r + ','
-            + this.g + ','
-            + this.b + ','
-            + this.a + ')')
+        .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
         .drawRect(this.x + this.width*2, this.y, this.width, this.length)
         .drawRect(this.x + this.width*4, this.y, this.width, this.length)
         .endFill()
         .endStroke();
-
-
     }
     drawAndUpdate(){
         this.draw();
@@ -61,16 +66,16 @@ class PauseButton {
     }
     unclick(){
       if (this.clicked == true) {
-          this.af = 0.1;
+          this.alphaFill = 0.1;
       }
       this.clicked = false;
       this.drawAndUpdate();
     }
     onClick() {
         if (!this.clicked) {
-            this.af = 0.5;
+            this.alphaFill = 0.5;
         } else {
-            this.af = 0.1;
+            this.alphaFill = 0.1;
         }
         play.unclick();
         stop.unclick();
@@ -79,11 +84,11 @@ class PauseButton {
         line.drawAndUpdate();
     }
     mouseOver() {
-        this.a = 1;
+        this.alphaStroke = 1;
         this.drawAndUpdate();
     }
     mouseOut() {
-        this.a = 0.5;
+        this.alphaStroke = 0.5;
         this.drawAndUpdate();
     }
 }
@@ -93,11 +98,10 @@ class StopButton {
       this.x = 20*(cSize/650);
       this.y = cSize - 70*(cSize/650);
       this.side = 51*(cSize/650);
-      this.r = 247;
-      this.b = 0;
-      this.g = 0;
-      this.a = 0.5; //aplha
-      this.af = 0.1; //aplha fill
+      this.color = new Color(247, 0, 0, 0.5);
+          
+      this.alphaStroke = 0.5; 
+      this.alphaFill = 0.1; 
       this.cSize = cSize;
       this.clicked = false;
 
@@ -111,22 +115,12 @@ class StopButton {
     }
     draw() {
         this.shape.graphics.clear()
-        .beginFill('rgba('
-            + this.r + ','
-            + this.g + ','
-            + this.b + ','
-            + this.af + ')')
+        .beginFill(this.color.setAlpha(this.alphaFill).toString())
         .setStrokeStyle(3*(this.cSize/650), 'round', 'round')
-        .beginStroke('rgba('
-            + this.r + ','
-            + this.g + ','
-            + this.b + ','
-            + this.a + ')')
+        .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
         .drawRect(this.x, this.y, this.side, this.side)
         .endFill()
         .endStroke();
-
-
     }
     drawAndUpdate(){
         this.draw();
@@ -134,16 +128,16 @@ class StopButton {
     }
     unclick(){
       if (this.clicked == true) {
-          this.af = 0.1;
+          this.alphaFill = 0.1;
       }
       this.clicked = false;
       this.drawAndUpdate();
     }
     onClick() {
         if (!this.clicked) {
-            this.af = 0.5;
+            this.alphaFill = 0.5;
         } else {
-            this.af = 0.1;
+            this.alphaFill = 0.1;
         }
         play.unclick();
         pause.unclick();
@@ -152,11 +146,11 @@ class StopButton {
         line.drawAndUpdate();
     }
     mouseOver() {
-        this.a = 1;
+        this.alphaStroke = 1;
         this.drawAndUpdate();
     }
     mouseOut() {
-        this.a = 0.5;
+        this.alphaStroke = 0.5;
         this.drawAndUpdate();
     }
 }
@@ -166,11 +160,10 @@ class PlayButton {
       this.x = 100*(cSize/650);
       this.y = cSize - 70*(cSize/650);
       this.side = 51*(cSize/650);
-      this.r = 0;
-      this.b = 27;
-      this.g = 237;
-      this.a = 0.5; //aplha
-      this.af = 0.1; //aplha fill
+      this.color = new Color(0, 237, 27, 0.5);
+      
+      this.alphaStroke = 0.5; //aplha
+      this.alphaFill = 0.1; //aplha fill
       this.cSize = cSize;
       this.clicked = false;
 
@@ -184,17 +177,9 @@ class PlayButton {
     }
     draw() {
         this.shape.graphics.clear()
-        .beginFill('rgba('
-            + this.r + ','
-            + this.g + ','
-            + this.b + ','
-            + this.af + ')')
+        .beginFill(this.color.setAlpha(this.alphaFill).toString())
         .setStrokeStyle(3*(this.cSize/650), 'round', 'round')
-        .beginStroke('rgba('
-            + this.r + ','
-            + this.g + ','
-            + this.b + ','
-            + this.a + ')')
+        .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
         .moveTo(this.x,this.y)
         .lineTo(this.x,this.y + this.side)
         .lineTo(this.x + this.side, this.y + (this.side/2))
@@ -210,16 +195,16 @@ class PlayButton {
     }
     unclick(){
       if (this.clicked == true) {
-          this.af = 0.1;
+          this.alphaFill = 0.1;
       }
       this.clicked = false;
       this.drawAndUpdate();
     }
     onClick() {
         if (!this.clicked) {
-            this.af = 0.5;
+            this.alphaFill = 0.5;
         } else {
-            this.af = 0.1;
+            this.alphaFill = 0.1;
         }
         stop.unclick();
         pause.unclick();
@@ -228,11 +213,11 @@ class PlayButton {
         line.drawAndUpdate();
     }
     mouseOver() {
-        this.a = 1;
+        this.alphaStroke = 1;
         this.drawAndUpdate();
     }
     mouseOut() {
-        this.a = 0.5;
+        this.alphaStroke = 0.5;
         this.drawAndUpdate();
     }
 }
@@ -243,11 +228,10 @@ class Circle {
         this.radius = 30*(cSize/650); //radius
         this.x = (40 + i * 70)*(cSize/650); //x cordinate
         this.y = (40 + j * 70)*(cSize/650); //y cordinate
-        this.r = 0; //red
-        this.b = Math.floor(255 - 25 * i); //blue
-        this.g = Math.floor(255 - 5 * j); //green
-        this.a = 0.5; //aplha
-        this.af = 0.1; //aplha fill
+        this.color = new Color(0, Math.floor(255 - 5 * j), Math.floor(255 - 25 * i), 0.5);
+     
+        this.alphaStroke = 0.5; //aplha
+        this.alphaFill = 0.1; //aplha fill
         this.cSize = cSize;
         this.clicked = false;
 
@@ -262,17 +246,9 @@ class Circle {
 
     draw() {
         this.shape.graphics.clear()
-        .beginFill('rgba('
-            + this.r + ','
-            + this.g + ','
-            + this.b + ','
-            + this.af + ')')
+        .beginFill(this.color.setAlpha(this.alphaFill).toString())
         .setStrokeStyle(3*(this.cSize/650), 'round', 'round')
-        .beginStroke('rgba('
-            + this.r + ','
-            + this.g + ','
-            + this.b + ','
-            + this.a + ')')
+        .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
         .drawCircle(0, 0, this.radius)
         .endFill()
         .endStroke();
@@ -283,19 +259,19 @@ class Circle {
     }
     onClick() {
         if (!this.clicked) {
-            this.af = 0.5;
+            this.alphaFill = 0.5;
         } else {
-            this.af = 0.1;
+            this.alphaFill = 0.1;
         }
         this.clicked = !this.clicked;
         this.drawAndUpdate();
     }
     mouseOver() {
-        this.a = 1;
+        this.alphaStroke = 1;
         this.drawAndUpdate();
     }
     mouseOut() {
-        this.a = 0.5;
+        this.alphaStroke = 0.5;
         this.drawAndUpdate();
     }
 }
