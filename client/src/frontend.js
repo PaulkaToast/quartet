@@ -1,4 +1,5 @@
 import createjs from 'createjs';
+import Color from './color';
 
 // variables//
 const speed = 10;
@@ -12,22 +13,6 @@ let line;
 let stop;
 let cSize;
 // Classes//
-class Color {
-    constructor(r, g, b, a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
-    }
-
-    setAlpha(newAlpha) {
-        return new Color(this.r, this.g, this.b, newAlpha);
-    }
-
-    toString() {
-        return `rgba(${this.r},${this.g},${this.b},${this.a})`;
-    }
-}
 class PauseButton {
     constructor() {
         this.x = 150 * (cSize / 650);
