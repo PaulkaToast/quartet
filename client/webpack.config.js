@@ -14,8 +14,10 @@ module.exports = {
             {
                 test: /\.js$/,
                 enforce: 'pre',
-
-                loader: 'eslint-loader'
+                loader: 'eslint-loader',
+                options: {
+                    fix: true
+                }
             },
             { 
                 test: /\.js$/, 
