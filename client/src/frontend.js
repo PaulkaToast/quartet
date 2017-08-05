@@ -278,10 +278,8 @@ class Line {
         this.x = 0; // x cordinate
         this.y = 0; // y cordinate
         this.length = 560 * (cSize / 650);
-        this.r = 255; // red
-        this.b = 0; // blue
-        this.g = 0; // green
-        this.a = 0.5; // aplha fill
+        this.color = new Color(255, 0, 0, 0.5);
+
         this.cSize = cSize;
         this.moving = false;
 
@@ -293,28 +291,18 @@ class Line {
 
     draw() {
         if (stop.clicked) {
-            this.r = 247;
-            this.b = 0;
-            this.g = 0;
+            this.color = new Color(255, 0, 0, 0.5);
             this.x = 0;
         }
         if (play.clicked) {
-            this.r = 0;
-            this.b = 27;
-            this.g = 237;
+            this.color = new Color(0, 237, 27, 0.5);
         }
         if (pause.clicked) {
-            this.r = 247;
-            this.b = 0;
-            this.g = 239;
+            this.color = new Color(247, 239, 0, 0.5);
         }
         this.shape.graphics.clear()
             .setStrokeStyle(15 * (this.cSize / 650), 'round', 'round')
-            .beginStroke(`rgba(${
-                this.r},${
-                this.g},${
-                this.b},${
-                this.a})`)
+            .beginStroke(this.color.toString())
             .moveTo(this.x, this.y)
             .lineTo(this.x, this.length)
             .endStroke();
