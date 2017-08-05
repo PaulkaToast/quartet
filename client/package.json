@@ -1,0 +1,27 @@
+{
+  "name": "quartet-client",
+  "version": "0.0.1",
+  "description": "client side code for quartet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PaulkaToast/quartet.git"
+  },
+  "author": "Paula Toth",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/PaulkaToast/quartet/issues"
+  },
+  "homepage": "https://github.com/PaulkaToast/quartet#readme",
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
+    "eslint": "^4.4.0",
+    "eslint-loader": "^1.9.0",
+    "webpack": "^3.4.1"
+  }
+}

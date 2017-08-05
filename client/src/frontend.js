@@ -1,5 +1,16 @@
+import createjs from 'createjs';
+
 //variables//
-speed = 10;
+const speed = 10;
+let stage;
+let ctx;
+let canvas;
+
+let play;
+let pause;
+let line;
+let stop;
+let cSize;
 //Classes//
 class PauseButton {
 
@@ -55,7 +66,7 @@ class PauseButton {
       this.clicked = false;
       this.drawAndUpdate();
     }
-    onClick(e) {
+    onClick() {
         if (!this.clicked) {
             this.af = 0.5;
         } else {
@@ -67,11 +78,11 @@ class PauseButton {
         this.drawAndUpdate();
         line.drawAndUpdate();
     }
-    mouseOver(e) {
+    mouseOver() {
         this.a = 1;
         this.drawAndUpdate();
     }
-    mouseOut(e) {
+    mouseOut() {
         this.a = 0.5;
         this.drawAndUpdate();
     }
@@ -128,7 +139,7 @@ class StopButton {
       this.clicked = false;
       this.drawAndUpdate();
     }
-    onClick(e) {
+    onClick() {
         if (!this.clicked) {
             this.af = 0.5;
         } else {
@@ -140,11 +151,11 @@ class StopButton {
         this.drawAndUpdate();
         line.drawAndUpdate();
     }
-    mouseOver(e) {
+    mouseOver() {
         this.a = 1;
         this.drawAndUpdate();
     }
-    mouseOut(e) {
+    mouseOut() {
         this.a = 0.5;
         this.drawAndUpdate();
     }
@@ -204,7 +215,7 @@ class PlayButton {
       this.clicked = false;
       this.drawAndUpdate();
     }
-    onClick(e) {
+    onClick() {
         if (!this.clicked) {
             this.af = 0.5;
         } else {
@@ -216,11 +227,11 @@ class PlayButton {
         this.drawAndUpdate();
         line.drawAndUpdate();
     }
-    mouseOver(e) {
+    mouseOver() {
         this.a = 1;
         this.drawAndUpdate();
     }
-    mouseOut(e) {
+    mouseOut() {
         this.a = 0.5;
         this.drawAndUpdate();
     }
@@ -270,7 +281,7 @@ class Circle {
         this.draw();
         stage.update();
     }
-    onClick(e) {
+    onClick() {
         if (!this.clicked) {
             this.af = 0.5;
         } else {
@@ -279,11 +290,11 @@ class Circle {
         this.clicked = !this.clicked;
         this.drawAndUpdate();
     }
-    mouseOver(e) {
+    mouseOver() {
         this.a = 1;
         this.drawAndUpdate();
     }
-    mouseOut(e) {
+    mouseOut() {
         this.a = 0.5;
         this.drawAndUpdate();
     }
@@ -353,6 +364,7 @@ function initCanvas() {
 
     draw();
 }
+window.initCanvas = initCanvas;
 function reInitCanvas() {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.canvas.width = window.innerWidth;
@@ -360,7 +372,8 @@ function reInitCanvas() {
 
     draw();
 }
-function tick(e) {
+window.reInitCanvas = reInitCanvas;
+function tick(/*e*/) {
     if(play.clicked){
         if(line.x < (560 * (cSize/650))) {
             line.x = line.x + speed*(cSize/650);
