@@ -12,6 +12,8 @@ let pause;
 let line;
 let stop;
 let cSize;
+
+const sounds = ['bang', 'clap', 'ding', 'ding2', 'pop', 'shutter', 'tap', 'valve'];
 // Classes//
 class PauseButton {
     constructor() {
@@ -203,7 +205,8 @@ class PlayButton {
 }
 
 class Circle {
-    constructor(i, j) {
+    constructor(i, j, s) {
+        this.sound = s;
         this.radius = 30 * (cSize / 650); // radius
         this.x = (40 + (i * 70)) * (cSize / 650); // x cordinate
         this.y = (40 + (j * 70)) * (cSize / 650); // y cordinate
@@ -243,6 +246,7 @@ class Circle {
     onClick() {
         if (!this.clicked) {
             this.alphaFill = 0.5;
+            playSound(this.sound);
         } else {
             this.alphaFill = 0.1;
         }
@@ -300,6 +304,19 @@ class Line {
 
 
 // functions//
+function loadSound() {
+    createjs.Sound.registerSound('sounds/bang.mp3', sounds[0]);
+    createjs.Sound.registerSound('sounds/clap.wav', sounds[1]);
+    createjs.Sound.registerSound('sounds/ding.wav', sounds[2]);
+    createjs.Sound.registerSound('sounds/ding2.wav', sounds[3]);
+    createjs.Sound.registerSound('sounds/pop.mp3', sounds[4]);
+    createjs.Sound.registerSound('sounds/shutter.wav', sounds[5]);
+    createjs.Sound.registerSound('sounds/tap.mp3', sounds[6]);
+    createjs.Sound.registerSound('sounds/valve.wav', sounds[7]);
+}
+function playSound(s) {
+    createjs.Sound.play(s);
+}
 function draw() {
     stage = new createjs.Stage(canvas);
     stage.enableMouseOver(30);
@@ -312,7 +329,7 @@ function draw() {
 
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-            const curr = new Circle(i, j);
+            const curr = new Circle(i, j, sounds[j]);
             curr.draw();
         }
     }
@@ -329,6 +346,7 @@ function draw() {
     stage.update();
 }
 function initCanvas() {
+    loadSound();
     canvas = document.getElementById('tutorial');
     ctx = canvas.getContext('2d');
     ctx.canvas.width = window.innerWidth;
