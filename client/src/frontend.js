@@ -12,7 +12,7 @@ let pause;
 let line;
 let stop;
 let cSize;
-
+const circles = [];
 const sounds = ['bang', 'clap', 'ding', 'ding2', 'pop', 'shutter', 'tap', 'valve'];
 // Classes//
 class PauseButton {
@@ -220,6 +220,7 @@ class Circle {
         this.alphaFill = 0.1; // aplha fill
         this.cSize = cSize;
         this.clicked = false;
+        this.played = false;
 
         this.shape = new createjs.Shape();
         this.shape.x = this.x;
@@ -330,6 +331,7 @@ function draw() {
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             const curr = new Circle(i, j, sounds[j]);
+            circles.push(curr);
             curr.draw();
         }
     }
@@ -341,6 +343,8 @@ function draw() {
     pause.draw();
     line = new Line();
     line.draw();
+    createjs.Ticker.interval = 1;
+    createjs.Ticker.framerate = 30;
     createjs.Ticker.addEventListener('tick', tick);
 
     stage.update();
@@ -365,6 +369,16 @@ function reInitCanvas() {
 window.reInitCanvas = reInitCanvas;
 function tick(/* e */) {
     if (play.clicked) {
+        for (const c of circles) {
+            if (line.x < c.x + c.radius && line.x > c.x - c.radius) {
+                if (c.clicked && !c.played) {
+                    playSound(c.sound);
+                    c.played = true;
+                }
+            } else {
+                c.played = false;
+            }
+        }
         if (line.x < (560 * (cSize / 650))) {
             line.x += speed * (cSize / 650);
             line.draw();
