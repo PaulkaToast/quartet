@@ -7,6 +7,8 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ public class Server {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
         server.createContext("/", new MainPageHandler());
         server.createContext("/frontend-bundle.js", new JavaScriptHandler());
+        server.createContext("/sounds", new SoundFileHandler());
         server.createContext("/state", new PageStateHandler());
         server.setExecutor(null);
         server.start();
@@ -32,21 +35,29 @@ public class Server {
     }
 
     public static void sendResponse(HttpExchange he, int code, String response) throws IOException {
-        he.sendResponseHeaders(code, response.length());
+        he.sendResponseHeaders(code, response.getBytes().length);
         OutputStream os = he.getResponseBody();
         os.write(response.getBytes());
         os.close();
     }
 
     public static String readFile(String filePath) throws IOException {
-        FileReader fileReader = new FileReader(filePath);
-        BufferedReader buffer = new BufferedReader(fileReader);
-        String response = "";
-        String line;
-        while ( ( line = buffer.readLine() ) != null ) {
-            response += line + "\n";
+        byte[] content = Files.readAllBytes(Paths.get(filePath));
+        return new String(content);
+    }
+
+    public static void sendFileAsResponse(HttpExchange he, String filePath) throws IOException {
+        long contentLength = Files.size(Paths.get(filePath));
+        he.sendResponseHeaders(200, contentLength);
+        OutputStream os = he.getResponseBody();
+        FileInputStream is = new FileInputStream(new File(filePath));
+        byte buffer[] = new byte[2048];
+        int count;
+        while ((count = is.read(buffer)) != -1) {
+            os.write(buffer, 0, count);
         }
-        return response;
+        os.close();
+
     }
 
     static class MainPageHandler implements HttpHandler {

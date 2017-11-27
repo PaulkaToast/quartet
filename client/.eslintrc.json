@@ -15,6 +15,7 @@
         "linebreak-style": "off",
         "no-plusplus": "off",
         "no-use-before-define": [ "error", { "functions": false } ],
-        "indent": [ 2, 4 ]
+        "indent": [ 2, 4 ],
+        "no-restricted-syntax": "off"
     }
 }
