@@ -60,3 +60,9 @@ typings/
 # dotenv environment variables file
 .env
 
+# IntelliJ Files
+.idea
+*.iml
+
+# Java Class Files
+out
