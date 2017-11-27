@@ -116,7 +116,13 @@ public class Server {
 
         @Override
         public String toString() {
-            return super.toString();
+            String response = "";
+            for (int i = 0; i < noteToggle.length; i++) {
+                for (int j = 0; j < noteToggle[0].length; j++) {
+                    response += noteToggle[i][j] ? "t" : "f";
+                }
+            }
+            return response;
         }
     }
 
