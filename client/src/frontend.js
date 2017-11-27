@@ -1,6 +1,9 @@
 import createjs from 'createjs';
 import Color from './color';
 
+const http = require('http');
+const querystring = require('querystring');
+
 // variables//
 const speed = 10;
 let stage;
@@ -207,6 +210,8 @@ class PlayButton {
 class Circle {
     constructor(i, j, s) {
         this.sound = s;
+        this.column = i;
+        this.row = j;
         this.radius = 30 * (cSize / 650); // radius
         this.x = (40 + (i * 70)) * (cSize / 650); // x cordinate
         this.y = (40 + (j * 70)) * (cSize / 650); // y cordinate
@@ -252,6 +257,26 @@ class Circle {
             this.alphaFill = 0.1;
         }
         this.clicked = !this.clicked;
+
+        const data = querystring.stringify({
+            row: this.row,
+            col: this.column,
+            toggle: this.clicked,
+        });
+        const params = {
+            hostname: window.location.hostname,
+            port: window.location.port,
+            path: '/state',
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': data.length
+            }
+        };
+        const request = http.request(params, () => { });
+        request.write(data);
+        request.end();
+
         this.drawAndUpdate();
     }
     mouseOver() {

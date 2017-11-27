@@ -18,16 +18,16 @@ class PageStateHandler implements HttpHandler {
         int responseCode = 200;
         switch (t.getRequestMethod()) {
             case "GET":
-                response = getPageState().toString();
+                response = pageState.toString();
                 break;
             case "PUT":
                 StateChange change = new StateChange();
-                Map<String, String> query = parseQuery(t.getRequestBody().toString());
+                Map<String, String> query = parseQuery(readToString(t.getRequestBody()));
                 if ( change.parse(query) ) {
                     pageState.add(change);
                 } else {
                     responseCode = 400;
-                    response = "Malformed request body";
+                    response = "Malformed request body: " + change.error;
                 }
                 break;
             default:
@@ -36,13 +36,5 @@ class PageStateHandler implements HttpHandler {
         }
 
         sendResponse(t, responseCode, response);
-    }
-
-    public PageState getPageState() throws IOException {
-        return pageState;
-    }
-
-    public void updatePageState(StateChange change) {
-        pageState.add(change);
     }
 }

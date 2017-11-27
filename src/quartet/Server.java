@@ -60,6 +60,13 @@ public class Server {
 
     }
 
+    public static String readToString(InputStream is) throws IOException {
+        String str = "";
+        int c;
+        while ( (c = is.read()) != -1 ) str += (char) c;
+        return str;
+    }
+
     static class MainPageHandler implements HttpHandler {
 
         @Override
@@ -74,33 +81,34 @@ public class Server {
         int row;
         int col;
         boolean toggle;
+        String error = "Error not specified";
 
         boolean parse(Map<String, String> query) {
             String value;
 
             value = query.get("row");
-            if (value == null) return false;
+            if (value == null) { error = "No row value"; return false; }
             else try { row = Integer.parseInt(value); }
-            catch (NumberFormatException ex) { return false; }
+            catch (NumberFormatException ex) { error = "Row value invalid"; return false; }
 
 
             value = query.get("col");
-            if (value == null) return false;
+            if (value == null) { error = "No column value"; return false; }
             else try { col = Integer.parseInt(value); }
-            catch (NumberFormatException ex) { return false; }
+            catch (NumberFormatException ex)  { error = "Column value invalid"; return false; }
 
             value = query.get("toggle");
-            if (value == null) return false;
+            if (value == null)  { error = "No toggle value"; return false; }
             else if (value.equals("true")) toggle = true;
             else if (value.equals("false")) toggle = false;
-            else return false;
+            else  { error = "Invalid toggle value"; return false; }
 
             return true;
         }
     }
 
     static class PageState {
-        boolean noteToggle[][];
+        boolean noteToggle[][] = new boolean[8][8];
 
         void add(StateChange change) {
             noteToggle[change.row][change.col] = change.toggle;
