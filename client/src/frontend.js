@@ -337,6 +337,8 @@ function loadSound() {
 function playSound(s) {
     createjs.Sound.play(s);
 }
+
+const clicked = [];
 function draw() {
     stage = new createjs.Stage(canvas);
     stage.enableMouseOver(30);
@@ -350,6 +352,9 @@ function draw() {
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             const curr = new Circle(i, j, sounds[j]);
+            if (clicked[i + (j * 8)] === 116) {
+                curr.clicked = true;
+            }
             circles.push(curr);
             curr.draw();
         }
@@ -375,7 +380,27 @@ function initCanvas() {
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
 
-    draw();
+    const params = {
+        hostname: window.location.hostname,
+        port: window.location.port,
+        path: '/state',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': 0,
+        },
+    };
+    const request = http.request(params, (response) => {
+        response.on('data', (chunk) => {
+            for (let i = 0; i < chunk.length; i++) {
+                clicked.push(chunk[i]);
+            }
+        });
+        response.on('end', () => {
+            draw();
+        });
+    });
+    request.end();
 }
 window.initCanvas = initCanvas;
 function reInitCanvas() {
