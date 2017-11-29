@@ -222,7 +222,6 @@ class Circle {
             0.5);
 
         this.alphaStroke = 0.5; // aplha
-        this.alphaFill = 0.1; // aplha fill
         this.cSize = cSize;
         this.clicked = false;
         this.played = false;
@@ -238,7 +237,7 @@ class Circle {
 
     draw() {
         this.shape.graphics.clear()
-            .beginFill(this.color.setAlpha(this.alphaFill).toString())
+            .beginFill(this.color.setAlpha(this.clicked ? 0.5 : 0.1).toString())
             .setStrokeStyle(3 * (this.cSize / 650), 'round', 'round')
             .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
             .drawCircle(0, 0, this.radius)
@@ -250,13 +249,8 @@ class Circle {
         stage.update();
     }
     onClick() {
-        if (!this.clicked) {
-            this.alphaFill = 0.5;
-            playSound(this.sound);
-        } else {
-            this.alphaFill = 0.1;
-        }
         this.clicked = !this.clicked;
+        if (this.clicked) playSound(this.sound);
 
         const data = querystring.stringify({
             row: this.row,
@@ -270,8 +264,8 @@ class Circle {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': data.length
-            }
+                'Content-Length': data.length,
+            },
         };
         const request = http.request(params, () => { });
         request.write(data);
