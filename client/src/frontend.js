@@ -222,7 +222,6 @@ class Circle {
             0.5);
 
         this.alphaStroke = 0.5; // aplha
-        this.alphaFill = 0.1; // aplha fill
         this.cSize = cSize;
         this.clicked = false;
         this.played = false;
@@ -238,7 +237,7 @@ class Circle {
 
     draw() {
         this.shape.graphics.clear()
-            .beginFill(this.color.setAlpha(this.alphaFill).toString())
+            .beginFill(this.color.setAlpha(this.clicked ? 0.5 : 0.1).toString())
             .setStrokeStyle(3 * (this.cSize / 650), 'round', 'round')
             .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
             .drawCircle(0, 0, this.radius)
@@ -250,13 +249,8 @@ class Circle {
         stage.update();
     }
     onClick() {
-        if (!this.clicked) {
-            this.alphaFill = 0.5;
-            playSound(this.sound);
-        } else {
-            this.alphaFill = 0.1;
-        }
         this.clicked = !this.clicked;
+        if (this.clicked) playSound(this.sound);
 
         const data = querystring.stringify({
             row: this.row,
@@ -270,8 +264,8 @@ class Circle {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': data.length
-            }
+                'Content-Length': data.length,
+            },
         };
         const request = http.request(params, () => { });
         request.write(data);
@@ -343,6 +337,8 @@ function loadSound() {
 function playSound(s) {
     createjs.Sound.play(s);
 }
+
+const clicked = [];
 function draw() {
     stage = new createjs.Stage(canvas);
     stage.enableMouseOver(30);
@@ -356,6 +352,9 @@ function draw() {
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             const curr = new Circle(i, j, sounds[j]);
+            if (clicked[i + (j * 8)] === 116) {
+                curr.clicked = true;
+            }
             circles.push(curr);
             curr.draw();
         }
@@ -381,7 +380,27 @@ function initCanvas() {
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
 
-    draw();
+    const params = {
+        hostname: window.location.hostname,
+        port: window.location.port,
+        path: '/state',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': 0,
+        },
+    };
+    const request = http.request(params, (response) => {
+        response.on('data', (chunk) => {
+            for (let i = 0; i < chunk.length; i++) {
+                clicked.push(chunk[i]);
+            }
+        });
+        response.on('end', () => {
+            draw();
+        });
+    });
+    request.end();
 }
 window.initCanvas = initCanvas;
 function reInitCanvas() {
