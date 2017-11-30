@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 import static quartet.Server.*;
 
@@ -22,8 +23,9 @@ class MainPageHandler implements HttpHandler {
                 Map<String, String> data = parseQuery(readToString(he.getRequestBody()));
                 if (data.containsKey("signup")) {
                     UserSession userSession = new UserSession(0);
-                    sessionList.add(userSession);
-                    resHeaders.set("Set-Cookie", "session=" + userSession.token);
+                    String token = UUID.randomUUID().toString();
+                    sessionList.put(token, userSession);
+                    resHeaders.set("Set-Cookie", "session=" + token);
                     showApp(he);
                     return;
                 }
@@ -33,12 +35,10 @@ class MainPageHandler implements HttpHandler {
                 if (cookie == null) break;
                 String comp[] = cookie.split("=");
                 if (comp.length < 2 || !comp[0].equals("session")) break;
-                String token = comp[1];
-                for (UserSession userSession : sessionList) {
-                    if ( userSession.token.equals(token) ) {
-                        showApp(he);
-                        return;
-                    }
+                UserSession userSession = sessionList.get(comp[1]);
+                if (userSession != null) {
+                    showApp(he);
+                    return;
                 }
                 break;
             default:
@@ -51,7 +51,6 @@ class MainPageHandler implements HttpHandler {
 
     void showLogin(HttpExchange he) throws IOException {
         Headers resHeaders = he.getResponseHeaders();
-        //resHeaders.set("Set-Cookie", "session=abcdefg");
         resHeaders.set("Content-Type", "text/html");
         String response = readFile("login.html");
         sendResponse(he, 200, response);

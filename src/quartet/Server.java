@@ -16,7 +16,7 @@ import java.util.Map;
 public class Server {
 
     public static List<PageState> pageStateList = new ArrayList<>();
-    public static List<UserSession> sessionList = new ArrayList<>();
+    public static Map<String, UserSession> sessionList = new HashMap<>();
 
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
