@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
@@ -18,47 +19,95 @@ import static quartet.SqlHelperUtils.userTableName;
 
 class MainPageHandler implements HttpHandler {
 
+    class UserData {
+        boolean exists = false;
+        int pageStateId;
+    }
+
     @Override
     public void handle(HttpExchange he) throws IOException {
 
         Headers reqHeaders = he.getRequestHeaders();
         Headers resHeaders = he.getResponseHeaders();
 
+        final UserData userData = new UserData();
+
         switch (he.getRequestMethod()) {
             case "POST":
                 Map<String, String> data = parseQuery(readToString(he.getRequestBody()));
                 if (data.containsKey("signup") && data.containsKey("username") &&
-                        data.containsKey("password") && data.containsKey("cpassword")) {
+                        data.containsKey("password") && data.containsKey("cpassword"))
+                {
 
                     if ( !data.get("password").equals(data.get("cpassword")) ) break;
 
-                    PageState ps = new PageState();
-                    pageStateList.add(ps);
-                    final int pageStateId = pageStateList.size() - 1;
-
                     connectToDb((Connection conn, List<Statement> statements) -> {
                         PreparedStatement s = conn.prepareStatement(
-                                "INSERT INTO " + userTableName + " VALUES (?, ?, ?)"
+                                "SELECT * FROM " + userTableName + " WHERE username=?"
+                        );
+                        statements.add(s);
+
+                        s.setString(1, data.get("username"));
+                        ResultSet rs = s.executeQuery();
+
+                        userData.exists = rs.next();
+                    });
+
+                    if (!userData.exists) {
+
+                        PageState ps = new PageState();
+                        pageStateList.add(ps);
+                        final int pageStateId = pageStateList.size() - 1;
+
+                        connectToDb((Connection conn, List<Statement> statements) -> {
+
+                            PreparedStatement s = conn.prepareStatement(
+                                    "INSERT INTO " + userTableName + " VALUES (?, ?, ?)"
+                            );
+                            statements.add(s);
+
+                            s.setString(1, data.get("username"));
+                            s.setString(2, data.get("password"));
+                            s.setInt(3, pageStateId);
+
+                            s.executeUpdate();
+                        });
+
+                        startUserSession(he, pageStateId);
+                        return;
+                    }
+                }
+                else if (data.containsKey("signout"))
+                {
+                    String token = getSessionCookie(reqHeaders);
+                    if (token != null && sessionList.containsKey(token)) sessionList.remove(token);
+                    resHeaders.set("Set-Cookie", "session=null; Expires=Tue, 1 Jan 1980 00:00:00 GMT");
+                }
+                else if (data.containsKey("signin") && data.containsKey("username") && data.containsKey("password"))
+                {
+                    connectToDb((Connection conn, List<Statement> statements) -> {
+                        PreparedStatement s = conn.prepareStatement(
+                                "SELECT pageStateId FROM " + userTableName + " WHERE username=? AND password=?"
                         );
                         statements.add(s);
 
                         s.setString(1, data.get("username"));
                         s.setString(2, data.get("password"));
-                        s.setInt(3, pageStateId);
 
-                        s.executeUpdate();
+                        ResultSet rs = s.executeQuery();
+
+                        userData.exists = rs.next();
+
+                        if (userData.exists) {
+                            userData.pageStateId = rs.getInt(1);
+                            rs.close();
+                        }
                     });
 
-                    UserSession userSession = new UserSession(pageStateId);
-                    String token = UUID.randomUUID().toString();
-                    sessionList.put(token, userSession);
-                    resHeaders.set("Set-Cookie", "session=" + token);
-                    showApp(he);
-                    return;
-                } else if (data.containsKey("signout")) {
-                    String token = getSessionCookie(reqHeaders);
-                    if (token != null && sessionList.containsKey(token)) sessionList.remove(token);
-                    resHeaders.set("Set-Cookie", "session=null; Expires=Tue, 1 Jan 1980 00:00:00 GMT");
+                    if (userData.exists) {
+                        startUserSession(he, userData.pageStateId);
+                        return;
+                    }
                 }
                 break;
             case "GET":
@@ -76,6 +125,15 @@ class MainPageHandler implements HttpHandler {
         }
 
         showLogin(he);
+    }
+
+    void startUserSession(HttpExchange he, int pageStateId) throws IOException {
+        Headers resHeaders = he.getResponseHeaders();
+        UserSession userSession = new UserSession(pageStateId);
+        String token = UUID.randomUUID().toString();
+        sessionList.put(token, userSession);
+        resHeaders.set("Set-Cookie", "session=" + token);
+        showApp(he);
     }
 
     void showLogin(HttpExchange he) throws IOException {
