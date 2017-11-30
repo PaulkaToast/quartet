@@ -9,6 +9,7 @@ import static quartet.SqlHelperUtils.*;
 
 class DropTables implements SqlActions {
     public static void main(String args[]) {
+        initConnection();
         connectToDb(new DropTables());
     }
 

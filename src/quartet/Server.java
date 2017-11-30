@@ -42,6 +42,7 @@ public class Server {
 
         server.createContext("/", new MainPageHandler());
         server.createContext("/frontend-bundle.js", new JavaScriptHandler());
+        server.createContext("/images", new ImageHandler());
         server.createContext("/sounds", new SoundFileHandler());
         server.createContext("/state", new PageStateHandler());
         server.setExecutor(null);
