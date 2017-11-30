@@ -1,7 +1,6 @@
 package quartet;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.*;
@@ -9,13 +8,21 @@ import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Server {
 
+    public static List<PageState> pageStateList = new ArrayList<>();
+    public static List<UserSession> sessionList = new ArrayList<>();
+
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+
+        pageStateList.add(new PageState());
+
         server.createContext("/", new MainPageHandler());
         server.createContext("/frontend-bundle.js", new JavaScriptHandler());
         server.createContext("/sounds", new SoundFileHandler());
@@ -65,16 +72,6 @@ public class Server {
         int c;
         while ( (c = is.read()) != -1 ) str += (char) c;
         return str;
-    }
-
-    static class MainPageHandler implements HttpHandler {
-
-        @Override
-        public void handle(HttpExchange he) throws IOException {
-            he.getResponseHeaders().set("Content-Type", "text/html");
-            String response = readFile("index.html");
-            sendResponse(he, 200, response);
-        }
     }
 
     static class StateChange {

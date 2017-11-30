@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quartet - Sign In or Sign Up</title>
+    <style>
+            body{
+                background-color: rgb(36,37,38);
+                text-align: center;
+                margin: 0;
+                font-family: helvetica;
+            }
+            form {
+                display: inline-block;
+                text-align: left;
+                background-color: rgb(100,150,250);
+                margin: 20px;
+                border-radius: 10px;
+            }
+            form > div {
+                display: block;
+                margin: 15px;
+            }
+        </style>
+</head>
+</head>
+<body>
+    <form method="post" action="/">
+        <div>
+            <label> Username: <input type="text" name="username" /></label>
+        </div>
+        <div>
+            <label> Password: <input type="password" name="password" /></label>
+        </div>
+        <div><input type="submit" name="signin" value="Sign In" /></div>
+    </form>
+    <br>
+    <form method="post" action="/">
+        <div>
+            <label> Username: <input type="text" name="username" /></label>
+        </div>
+        <div>
+            <label> Password: <input type="password" name="password" /></label>
+        </div>
+        <div>
+            <label> Confirm Password: <input type="password" name="cpassword" /></label>
+        </div>
+        <div><input type="submit" name="signup" value="Sign Up" /></div>
+    </form>
+</body>
+</html>

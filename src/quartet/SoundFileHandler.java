@@ -6,8 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.File;
 import java.io.IOException;
 
-import static quartet.Server.sendResponse;
-import static quartet.Server.sendFileAsResponse;
+import static quartet.Server.*;
 
 class SoundFileHandler implements HttpHandler {
     @Override
