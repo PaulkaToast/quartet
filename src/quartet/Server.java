@@ -1,5 +1,6 @@
 package quartet;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -8,16 +9,14 @@ import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static quartet.SqlHelperUtils.connectToDb;
+import static quartet.SqlHelperUtils.initConnection;
 import static quartet.SqlHelperUtils.pageStateTableName;
 
 public class Server {
@@ -27,6 +26,8 @@ public class Server {
 
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+
+        initConnection();
 
         connectToDb((Connection conn, List< Statement > statements) -> {
             Statement s = conn.createStatement();
@@ -88,6 +89,14 @@ public class Server {
         int c;
         while ( (c = is.read()) != -1 ) str += (char) c;
         return str;
+    }
+
+    public static String getSessionCookie(Headers reqHeaders) {
+        String cookie = reqHeaders.getFirst("Cookie");
+        if (cookie == null) return null;
+        String comp[] = cookie.split("=");
+        if (comp.length < 2 || !comp[0].equals("session")) return null;
+        return comp[1];
     }
 
     static class StateChange {

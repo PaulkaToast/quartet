@@ -23,6 +23,11 @@
             body{
                 margin: 0;
             }
+            #signout {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
         </style>
     </head>
     <body onload="initCanvas();"
@@ -32,5 +37,8 @@
         <![endif]-->
 
         <canvas id="tutorial"></canvas>
+        <form id="signout" method="post" action="/">
+            <input type="submit" name="signout" value="Sign Out"/>
+        </form>
     </body>
 </html>

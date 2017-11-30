@@ -9,6 +9,22 @@ class SqlHelperUtils {
     static final String dbName = "derbyDB";
     static final String pageStateTableName = "PageState";
     static final String userTableName = "UserAccount";
+    static Connection conn;
+
+    public static void initConnection() {
+
+        try {
+            conn = DriverManager.getConnection("jdbc:derby:" + dbName + ";create=true");
+
+            System.out.println("Connected to and created database " + dbName);
+
+            // We want to control transactions manually. Autocommit is on by
+            // default in JDBC.
+            conn.setAutoCommit(false);
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+    }
 
     public static void connectToDb(SqlActions sqlActions) {
         /* We will be using Statement and PreparedStatement objects for
@@ -18,19 +34,10 @@ class SqlHelperUtils {
          * We are storing the Statement and Prepared statement object references
          * in an array list for convenience.
          */
-        Connection conn = null;
         List<Statement> statements = new ArrayList<Statement>(); // list of Statements, PreparedStatements
         ResultSet rs = null;
         try
         {
-            conn = DriverManager.getConnection("jdbc:derby:" + dbName + ";create=true");
-
-            System.out.println("Connected to and created database " + dbName);
-
-            // We want to control transactions manually. Autocommit is on by
-            // default in JDBC.
-            conn.setAutoCommit(false);
-
             sqlActions.run(conn, statements);
 
             /*
@@ -40,26 +47,26 @@ class SqlHelperUtils {
             conn.commit();
             System.out.println("Committed the transaction");
 
-            try
-            {
-                // the shutdown=true attribute shuts down Derby
-                DriverManager.getConnection("jdbc:derby:;shutdown=true");
-            }
-            catch (SQLException se)
-            {
-                if (( (se.getErrorCode() == 50000)
-                        && ("XJ015".equals(se.getSQLState()) ))) {
-                    // we got the expected exception
-                    System.out.println("Derby shut down normally");
-                    // Note that for single database shutdown, the expected
-                    // SQL state is "08006", and the error code is 45000.
-                } else {
-                    // if the error code or SQLState is different, we have
-                    // an unexpected exception (shutdown failed)
-                    System.err.println("Derby did not shut down normally");
-                    printSQLException(se);
-                }
-            }
+//            try
+//            {
+//                // the shutdown=true attribute shuts down Derby
+//                DriverManager.getConnection("jdbc:derby:;shutdown=true");
+//            }
+//            catch (SQLException se)
+//            {
+//                if (( (se.getErrorCode() == 50000)
+//                        && ("XJ015".equals(se.getSQLState()) ))) {
+//                    // we got the expected exception
+//                    System.out.println("Derby shut down normally");
+//                    // Note that for single database shutdown, the expected
+//                    // SQL state is "08006", and the error code is 45000.
+//                } else {
+//                    // if the error code or SQLState is different, we have
+//                    // an unexpected exception (shutdown failed)
+//                    System.err.println("Derby did not shut down normally");
+//                    printSQLException(se);
+//                }
+//            }
         }
         catch (SQLException sqle)
         {
@@ -93,14 +100,14 @@ class SqlHelperUtils {
             }
 
             //Connection
-            try {
-                if (conn != null) {
-                    conn.close();
-                    conn = null;
-                }
-            } catch (SQLException sqle) {
-                printSQLException(sqle);
-            }
+//            try {
+//                if (conn != null) {
+//                    conn.close();
+//                    conn = null;
+//                }
+//            } catch (SQLException sqle) {
+//                printSQLException(sqle);
+//            }
         }
     }
 

@@ -21,29 +21,33 @@
                 display: block;
                 margin: 15px;
             }
+            form input[type="text"], form input[type="password"] {
+                width: 300px;
+                margin: 5px 0px;
+            }
         </style>
 </head>
 </head>
 <body>
     <form method="post" action="/">
         <div>
-            <label> Username: <input type="text" name="username" /></label>
+            <label> Username: <br><input type="text" name="username" /></label>
         </div>
         <div>
-            <label> Password: <input type="password" name="password" /></label>
+            <label> Password: <br><input type="password" name="password" /></label>
         </div>
         <div><input type="submit" name="signin" value="Sign In" /></div>
     </form>
     <br>
     <form method="post" action="/">
         <div>
-            <label> Username: <input type="text" name="username" /></label>
+            <label> Username: <br><input type="text" name="username" /></label>
         </div>
         <div>
-            <label> Password: <input type="password" name="password" /></label>
+            <label> Password: <br><input type="password" name="password" /></label>
         </div>
         <div>
-            <label> Confirm Password: <input type="password" name="cpassword" /></label>
+            <label> Confirm Password: <br><input type="password" name="cpassword" /></label>
         </div>
         <div><input type="submit" name="signup" value="Sign Up" /></div>
     </form>

@@ -55,14 +55,16 @@ class MainPageHandler implements HttpHandler {
                     resHeaders.set("Set-Cookie", "session=" + token);
                     showApp(he);
                     return;
+                } else if (data.containsKey("signout")) {
+                    String token = getSessionCookie(reqHeaders);
+                    if (token != null && sessionList.containsKey(token)) sessionList.remove(token);
+                    resHeaders.set("Set-Cookie", "session=null; Expires=Tue, 1 Jan 1980 00:00:00 GMT");
                 }
                 break;
             case "GET":
-                String cookie = reqHeaders.getFirst("Cookie");
-                if (cookie == null) break;
-                String comp[] = cookie.split("=");
-                if (comp.length < 2 || !comp[0].equals("session")) break;
-                UserSession userSession = sessionList.get(comp[1]);
+                String token = getSessionCookie(reqHeaders);
+                if (token == null) break;
+                UserSession userSession = sessionList.get(token);
                 if (userSession != null) {
                     showApp(he);
                     return;
