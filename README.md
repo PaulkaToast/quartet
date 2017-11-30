@@ -8,3 +8,15 @@ An online multi-person sequencer that you can play around with to make music
 2. `npm install` 
 
 3. ` ./node_modules/.bin/webpack`
+
+## Building the Database
+
+`./create-tables`
+
+## Starting the Server
+
+`./run-server`
+
+## Emptying the Database
+
+`./drop-tables`
