@@ -8,10 +8,17 @@ import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static quartet.SqlHelperUtils.connectToDB;
+import static quartet.SqlHelperUtils.pageStateTableName;
 
 public class Server {
 
@@ -21,7 +28,16 @@ public class Server {
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
-        pageStateList.add(new PageState());
+        connectToDB((Connection conn, List< Statement > statements) -> {
+            Statement s = conn.createStatement();
+            statements.add(s);
+
+            ResultSet rs = s.executeQuery("SELECT state FROM " + pageStateTableName + " ORDER BY id");
+            while ( rs.next() ) {
+                pageStateList.add(new PageState(rs.getString(1)));
+            }
+            if (rs != null) rs.close();
+        });
 
         server.createContext("/", new MainPageHandler());
         server.createContext("/frontend-bundle.js", new JavaScriptHandler());
@@ -106,6 +122,29 @@ public class Server {
 
     static class PageState {
         boolean noteToggle[][] = new boolean[8][8];
+
+        public PageState() {
+            int id = pageStateList.size();
+            connectToDB((Connection conn, List< Statement > statements) -> {
+                PreparedStatement s = conn.prepareStatement("INSERT INTO " + pageStateTableName + " VALUES (?, ?)");
+                statements.add(s);
+
+                s.setInt(1, id);
+                int noteCount = noteToggle.length * noteToggle.length;
+                String noteString = "";
+                for (int i = 0; i < noteCount; i++) {
+                    noteString += "f";
+                }
+                s.setString(2, noteString);
+                s.executeUpdate();
+            });
+        }
+
+        public PageState(String string) {
+            for (int i = 0; i < string.length(); i++) {
+                noteToggle[i / 8][i % 8] = string.charAt(i) == 't';
+            }
+        }
 
         void add(StateChange change) {
             noteToggle[change.row][change.col] = change.toggle;

@@ -22,7 +22,9 @@ class MainPageHandler implements HttpHandler {
             case "POST":
                 Map<String, String> data = parseQuery(readToString(he.getRequestBody()));
                 if (data.containsKey("signup")) {
-                    UserSession userSession = new UserSession(0);
+                    PageState ps = new PageState();
+                    pageStateList.add(ps);
+                    UserSession userSession = new UserSession(pageStateList.size() - 1);
                     String token = UUID.randomUUID().toString();
                     sessionList.put(token, userSession);
                     resHeaders.set("Set-Cookie", "session=" + token);
