@@ -5,10 +5,16 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import static quartet.Server.*;
+import static quartet.SqlHelperUtils.connectToDb;
+import static quartet.SqlHelperUtils.userTableName;
 
 class MainPageHandler implements HttpHandler {
 
@@ -21,10 +27,29 @@ class MainPageHandler implements HttpHandler {
         switch (he.getRequestMethod()) {
             case "POST":
                 Map<String, String> data = parseQuery(readToString(he.getRequestBody()));
-                if (data.containsKey("signup")) {
+                if (data.containsKey("signup") && data.containsKey("username") &&
+                        data.containsKey("password") && data.containsKey("cpassword")) {
+
+                    if ( !data.get("password").equals(data.get("cpassword")) ) break;
+
                     PageState ps = new PageState();
                     pageStateList.add(ps);
-                    UserSession userSession = new UserSession(pageStateList.size() - 1);
+                    final int pageStateId = pageStateList.size() - 1;
+
+                    connectToDb((Connection conn, List<Statement> statements) -> {
+                        PreparedStatement s = conn.prepareStatement(
+                                "INSERT INTO " + userTableName + " VALUES (?, ?, ?)"
+                        );
+                        statements.add(s);
+
+                        s.setString(1, data.get("username"));
+                        s.setString(2, data.get("password"));
+                        s.setInt(3, pageStateId);
+
+                        s.executeUpdate();
+                    });
+
+                    UserSession userSession = new UserSession(pageStateId);
                     String token = UUID.randomUUID().toString();
                     sessionList.put(token, userSession);
                     resHeaders.set("Set-Cookie", "session=" + token);

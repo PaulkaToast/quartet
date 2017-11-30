@@ -6,10 +6,11 @@ import java.util.List;
 
 class SqlHelperUtils {
 
-    static String dbName = "derbyDB";
-    static String pageStateTableName = "PageState";
+    static final String dbName = "derbyDB";
+    static final String pageStateTableName = "PageState";
+    static final String userTableName = "UserAccount";
 
-    public static void connectToDB(SqlActions sqlActions) {
+    public static void connectToDb(SqlActions sqlActions) {
         /* We will be using Statement and PreparedStatement objects for
          * executing SQL. These objects, as well as Connections and ResultSets,
          * are resources that should be released explicitly after use, hence

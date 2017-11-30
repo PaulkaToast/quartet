@@ -5,12 +5,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import static quartet.SqlHelperUtils.connectToDB;
-import static quartet.SqlHelperUtils.pageStateTableName;
+import static quartet.SqlHelperUtils.*;
 
 class DropTables implements SqlActions {
     public static void main(String args[]) {
-        connectToDB(new DropTables());
+        connectToDb(new DropTables());
     }
 
     @Override
@@ -21,8 +20,14 @@ class DropTables implements SqlActions {
         s = conn.createStatement();
         statements.add(s);
 
-        // delete the table
+        // delete the tables
         s.execute("drop table " + pageStateTableName);
         System.out.println("Dropped table " + pageStateTableName);
+
+        s = conn.createStatement();
+        statements.add(s);
+
+        s.execute("drop table " + userTableName);
+        System.out.println("Dropped table " + userTableName);
     }
 }

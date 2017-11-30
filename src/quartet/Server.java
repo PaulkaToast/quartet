@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static quartet.SqlHelperUtils.connectToDB;
+import static quartet.SqlHelperUtils.connectToDb;
 import static quartet.SqlHelperUtils.pageStateTableName;
 
 public class Server {
@@ -28,7 +28,7 @@ public class Server {
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
-        connectToDB((Connection conn, List< Statement > statements) -> {
+        connectToDb((Connection conn, List< Statement > statements) -> {
             Statement s = conn.createStatement();
             statements.add(s);
 
@@ -125,7 +125,7 @@ public class Server {
 
         public PageState() {
             int id = pageStateList.size();
-            connectToDB((Connection conn, List< Statement > statements) -> {
+            connectToDb((Connection conn, List< Statement > statements) -> {
                 PreparedStatement s = conn.prepareStatement("INSERT INTO " + pageStateTableName + " VALUES (?, ?)");
                 statements.add(s);
 

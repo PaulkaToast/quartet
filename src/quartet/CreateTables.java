@@ -5,12 +5,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import static quartet.SqlHelperUtils.connectToDB;
-import static quartet.SqlHelperUtils.pageStateTableName;
+import static quartet.SqlHelperUtils.*;
 
 class CreateTables implements SqlActions {
     public static void main(String args[]) {
-        connectToDB(new CreateTables());
+        connectToDb(new CreateTables());
     }
 
     @Override
@@ -20,14 +19,22 @@ class CreateTables implements SqlActions {
          * SQL statements commands against the database.*/
         s = conn.createStatement();
         statements.add(s);
-
-        // We create a table...
         s.execute("create table " + pageStateTableName + "(" +
                 "id int," +
                 "state varchar(64)" +
                 ")"
         );
         System.out.println("Created table " + pageStateTableName);
+
+        s = conn.createStatement();
+        statements.add(s);
+        s.execute("create table " + userTableName + "(" +
+                "username varchar(128)," +
+                "password varchar(128)," +
+                "pageStateId int" +
+                ")"
+        );
+        System.out.println("Created table " + userTableName);
 
     }
 }
