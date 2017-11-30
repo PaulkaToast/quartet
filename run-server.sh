@@ -1,4 +1,4 @@
 #!/bin/bash
 
 ./compile.sh
-java -cp out quartet.Server
+java -cp ./out:./derby.jar quartet.Server
