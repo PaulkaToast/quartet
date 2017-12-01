@@ -17,12 +17,10 @@ class PageStateHandler implements HttpHandler {
         int responseCode = 200;
 
         Headers reqHeaders = he.getRequestHeaders();
-        String cookie = reqHeaders.getFirst("Cookie");
-        if (cookie == null) { badCookie(he); return; }
-        String comp[] = cookie.split("=");
-        if (comp.length < 2 || !comp[0].equals("session")) { badCookie(he); return; }
+        String token = getSessionCookie(reqHeaders);
+        if (token == null) { badCookie(he); return; }
 
-        UserSession userSession = sessionList.get(comp[1]);
+        UserSession userSession = sessionList.get(token);
         if (userSession != null) {
             PageState pageState = userSession.pageState;
 
