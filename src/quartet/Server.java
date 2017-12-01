@@ -94,6 +94,7 @@ public class Server {
 
     public static String getSessionCookie(Headers reqHeaders) {
         String cookies = reqHeaders.getFirst("Cookie");
+        if (cookies == null) return null;
         String cookie = cookies.substring(cookies.indexOf("session="));
         if (cookie == null) return null;
         String comp[] = cookie.split("=");
