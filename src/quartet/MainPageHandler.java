@@ -46,7 +46,7 @@ class MainPageHandler implements HttpHandler {
                         signUpError = "Error: Password and confirmed password do not match";
                         break;
                     } else if ( data.get("username").length() < 4 ) {
-                        signUpError = "Error: Username must be at least 6 characters in length";
+                        signUpError = "Error: Username must be at least 4 characters in length";
                         break;
                     } else if ( data.get("password").length() < 8 ) {
                         signUpError = "Error: Password must be at least 8 characters in length";

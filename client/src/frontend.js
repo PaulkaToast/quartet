@@ -1,4 +1,5 @@
 import createjs from 'createjs';
+import Tone from 'tone';
 import Color from './color';
 
 const http = require('http');
@@ -16,7 +17,10 @@ let line;
 let stop;
 let cSize;
 const circles = [];
-const sounds = ['bang', 'clap', 'ding', 'ding2', 'pop', 'shutter', 'tap', 'valve'];
+// const sounds = ['bang', 'clap', 'ding', 'ding2', 'pop', 'shutter', 'tap', 'valve'];
+const sounds = ['A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5', 'E5'];
+const synth = new Tone.PolySynth(8, Tone.Synth).toMaster();
+
 // Classes//
 class PauseButton {
     constructor() {
@@ -229,7 +233,13 @@ class Circle {
         this.shape = new createjs.Shape();
         this.shape.x = this.x;
         this.shape.y = this.y;
+
+        this.text = new createjs.Text(this.sound, `${cSize / 50}px Arial`, '#000000');
+        this.text.x = this.x - cSize / 100;
+        this.text.y = this.y - cSize / 100;
+
         stage.addChild(this.shape);
+        stage.addChild(this.text);
         this.shape.on('click', this.onClick.bind(this));
         this.shape.on('mouseover', this.mouseOver.bind(this));
         this.shape.on('mouseout', this.mouseOut.bind(this));
@@ -335,7 +345,8 @@ function loadSound() {
     createjs.Sound.registerSound('sounds/E5.wav', sounds[7]);
 }
 function playSound(s) {
-    createjs.Sound.play(s);
+    synth.triggerAttackRelease(s, '0.25s');
+    // createjs.Sound.play(s);
 }
 
 const clicked = [];
