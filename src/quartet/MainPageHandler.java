@@ -32,6 +32,9 @@ class MainPageHandler implements HttpHandler {
 
         final UserData userData = new UserData();
 
+        String signInError = null;
+        String signUpError = null;
+
         switch (he.getRequestMethod()) {
             case "POST":
                 Map<String, String> data = parseQuery(readToString(he.getRequestBody()));
@@ -39,7 +42,16 @@ class MainPageHandler implements HttpHandler {
                         data.containsKey("password") && data.containsKey("cpassword"))
                 {
 
-                    if ( !data.get("password").equals(data.get("cpassword")) ) break;
+                    if ( !data.get("password").equals(data.get("cpassword")) ) {
+                        signUpError = "Error: Password and confirmed password do not match";
+                        break;
+                    } else if ( data.get("username").length() < 4 ) {
+                        signUpError = "Error: Username must be at least 6 characters in length";
+                        break;
+                    } else if ( data.get("password").length() < 8 ) {
+                        signUpError = "Error: Password must be at least 8 characters in length";
+                        break;
+                    }
 
                     connectToDb((Connection conn, List<Statement> statements) -> {
                         PreparedStatement s = conn.prepareStatement(
@@ -53,7 +65,9 @@ class MainPageHandler implements HttpHandler {
                         userData.exists = rs.next();
                     });
 
-                    if (!userData.exists) {
+                    if (userData.exists) {
+                        signUpError = "Error: Username already exists";
+                    } else {
 
                         PageState ps = new PageState();
                         pageStateList.add(ps);
@@ -107,6 +121,8 @@ class MainPageHandler implements HttpHandler {
                     if (userData.exists) {
                         startUserSession(he, userData.pageStateId);
                         return;
+                    } else {
+                        signInError = "Error: Invalid login information";
                     }
                 }
                 break;
@@ -124,7 +140,7 @@ class MainPageHandler implements HttpHandler {
                 return;
         }
 
-        showLogin(he);
+        showLogin(he, signInError, signUpError);
     }
 
     void startUserSession(HttpExchange he, int pageStateId) throws IOException {
@@ -136,10 +152,16 @@ class MainPageHandler implements HttpHandler {
         showApp(he);
     }
 
-    void showLogin(HttpExchange he) throws IOException {
+    void showLogin(HttpExchange he, String signInError, String signUpError) throws IOException {
         Headers resHeaders = he.getResponseHeaders();
         resHeaders.set("Content-Type", "text/html");
         String response = readFile("login.html");
+        if (signInError != null) {
+            response = response.replace("<signinerror />", signInError);
+        }
+        if (signUpError != null) {
+            response = response.replace("<signuperror />", signUpError);
+        }
         sendResponse(he, 200, response);
 
     }
