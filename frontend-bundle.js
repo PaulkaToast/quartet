@@ -5389,9 +5389,10 @@ var Circle = function () {
         this.shape.x = this.x;
         this.shape.y = this.y;
 
-        this.text = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Text(this.sound, cSize / 50 + 'px Arial', '#000000');
-        this.text.x = this.x - cSize / 100;
+        this.text = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Text(this.sound, cSize / 50 + 'px Arial', this.color);
+        this.text.x = this.x;
         this.text.y = this.y - cSize / 100;
+        this.text.textAlign = 'center';
 
         stage.addChild(this.shape);
         stage.addChild(this.text);
