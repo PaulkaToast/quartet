@@ -5491,14 +5491,14 @@ var Line = function () {
 
 
 function loadSound() {
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/bang.mp3', sounds[0]);
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/clap.wav', sounds[1]);
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/ding.wav', sounds[2]);
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/ding2.wav', sounds[3]);
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/pop.mp3', sounds[4]);
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/shutter.wav', sounds[5]);
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/tap.mp3', sounds[6]);
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/valve.wav', sounds[7]);
+    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/A4.wav', sounds[0]);
+    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/As4.wav', sounds[1]);
+    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/B4.wav', sounds[2]);
+    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/C5.wav', sounds[3]);
+    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/Cs5.wav', sounds[4]);
+    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/D5.wav', sounds[5]);
+    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/Ds5.wav', sounds[6]);
+    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/E5.wav', sounds[7]);
 }
 function playSound(s) {
     __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.play(s);
