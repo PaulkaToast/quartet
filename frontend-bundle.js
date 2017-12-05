@@ -5391,7 +5391,7 @@ var Circle = function () {
 
         this.shape = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Shape();
 
-        this.text = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Text(this.sound, cSize / 80 + 'px Helvetica', this.color);
+        this.text = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Text('', cSize / 80 + 'px Helvetica', this.color);
         this.text.textAlign = 'center';
 
         stage.addChild(this.shape);
@@ -5412,6 +5412,7 @@ var Circle = function () {
             this.text.x = this.x;
             this.text.y = this.y - cSize / 160;
             this.text.font = cSize / 80 + 'px Helvetica';
+            this.text.text = sounds[this.row];
 
             this.shape.graphics.clear().beginFill(this.color.setAlpha(this.clicked ? 0.5 : 0.1).toString()).setStrokeStyle(3 * (cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawCircle(0, 0, this.radius).endFill().endStroke();
         }
@@ -5522,7 +5523,7 @@ function loadSound() {
     __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/E5.wav', sounds[7]);
 }
 function playSound(s) {
-    synth.triggerAttackRelease(s, 1 / speed + 's');
+    synth.triggerAttackRelease(sounds[s], 60 / speed + 's');
     // createjs.Sound.play(s);
 }
 
@@ -5557,19 +5558,48 @@ function initCanvas() {
         }
     };
     var request = http.request(params, function (response) {
+        var data = '';
         response.on('data', function (chunk) {
             for (var i = 0; i < chunk.length; i++) {
-                clicked.push(chunk[i]);
+                data += String.fromCharCode(chunk[i]);
             }
         });
         response.on('end', function () {
+            data = data.split('|');
+
+            for (var i = 0; i < data[0].length; i++) {
+                clicked.push(data[0][i]);
+            }
+
+            var noteList = data[1].split(',');
+            for (var _i = 0; _i < noteList.length; _i++) {
+                sounds[_i] = noteList[_i];
+            }
+
+            var noteInputs = document.getElementById('notes');
+            var noteNames = ['A', 'Bb', 'B', 'C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab'];
+            for (var _i2 = 0; _i2 < sounds.length; _i2++) {
+                var noteRow = document.createElement('select');
+                noteRow.noteIndex = _i2;
+                for (var n = 0; n < noteNames.length * 9; n++) {
+                    var option = document.createElement('option');
+                    option.value = noteNames[n % noteNames.length] + Math.floor(n / noteNames.length);
+                    option.innerText = option.value;
+                    noteRow.appendChild(option);
+                }
+                noteRow.value = sounds[_i2];
+                noteRow.addEventListener('change', updateNote.bind(noteRow, noteRow));
+                noteInputs.appendChild(noteRow);
+                noteInputs.appendChild(document.createElement('br'));
+            }
+
             stage = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Stage(canvas);
             stage.enableMouseOver(30);
 
             for (var j = 0; j < rowNum; j++) {
-                for (var i = 0; i < colNum; i++) {
-                    var curr = new Circle(i, j, sounds[j]);
-                    if (clicked[i + j * colNum] === 116) {
+                for (var _i3 = 0; _i3 < colNum; _i3++) {
+                    var curr = new Circle(_i3, j, j);
+                    if (clicked[_i3 + j * colNum] === 't') {
                         curr.clicked = true;
                     }
                     circles.push(curr);
@@ -5640,7 +5670,7 @@ function tick() /* e */{
         }
 
         if (line.x < colNum * (noteMargin + noteRadius * 2) * (cSize / sizeRatio)) {
-            line.x += speed / 120 * (cSize / sizeRatio);
+            line.x += speed / 1800 * (noteMargin + noteRadius * 2) * (cSize / sizeRatio);
             line.draw();
             stage.update();
         } else {
@@ -5684,6 +5714,30 @@ function updateSpeed() {
     tempoInput.value = speed;
 }
 window.updateSpeed = updateSpeed;
+
+function updateNote(noteRow) {
+    sounds[noteRow.noteIndex] = noteRow.value;
+
+    var data = querystring.stringify({
+        row: noteRow.noteIndex,
+        note: noteRow.value
+    });
+    var params = {
+        hostname: window.location.hostname,
+        port: window.location.port,
+        path: '/state',
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': data.length
+        }
+    };
+    var request = http.request(params, function () {});
+    request.write(data);
+    request.end();
+
+    draw();
+}
 
 /***/ }),
 /* 20 */

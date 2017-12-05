@@ -38,10 +38,12 @@
                 border-radius: 10px 0px 0px 10px;
             }
             #params > button {
-                margin: 0px 0px 20px 150px;
+                margin: 0px 0px 20px 100px;
 
             }
-
+            #tempo-input {
+                width: 50px;
+            }
         </style>
     </head>
     <body onload="initCanvas();"
@@ -60,6 +62,11 @@
             <label> Tempo (bpm):
                 <input id="tempo-input" type="number" name="speed" min="0" onchange="updateSpeed()" onkeypress="updateSpeed()" value="120"/>
             </label>
+            <br><br>
+            <div id="notes">
+                Notes:
+                <br>
+            </div>
         </div>
     </body>
 </html>

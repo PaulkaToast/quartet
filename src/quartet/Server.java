@@ -36,9 +36,9 @@ public class Server {
             Statement s = conn.createStatement();
             statements.add(s);
 
-            ResultSet rs = s.executeQuery("SELECT state FROM " + pageStateTableName + " ORDER BY id");
+            ResultSet rs = s.executeQuery("SELECT state, notes FROM " + pageStateTableName + " ORDER BY id");
             while ( rs.next() ) {
-                new PageState(rs.getString(1));
+                new PageState(rs.getString(1), rs.getString(2));
             }
             if (rs != null) rs.close();
         });
@@ -140,34 +140,57 @@ public class Server {
         }
     }
 
+    static class NoteChange {
+        String note;
+        int row;
+        String error = "Error not specified";
+
+        boolean parse(Map<String, String> query) {
+            String value;
+
+            value = query.get("note");
+            if (value == null) { error = "No note value"; return false; }
+            else { note = value; }
+
+
+            value = query.get("row");
+            if (value == null) { error = "No row value"; return false; }
+            else try { row = Integer.parseInt(value); }
+            catch (NumberFormatException ex)  { error = "Row value invalid"; return false; }
+
+            return true;
+        }
+    }
+
     static class PageState {
         int id;
         boolean noteToggle[][] = new boolean[17][16];
+        String note[] = {
+                "A3", "Bb4", "B4", "C5", "Db5", "D5", "Eb5", "E5",
+                "F5", "Gb5", "G5", "Ab5", "A5", "Bb5", "B5", "C6", "Db6"
+        };
 
         public PageState() {
             id = pageStateList.size();
             pageStateList.add(this);
             connectToDb((Connection conn, List< Statement > statements) -> {
-                PreparedStatement s = conn.prepareStatement("INSERT INTO " + pageStateTableName + " VALUES (?, ?)");
+                PreparedStatement s = conn.prepareStatement("INSERT INTO " + pageStateTableName + " VALUES (?, ?, ?)");
                 statements.add(s);
 
                 s.setInt(1, id);
-                int noteCount = noteToggle.length * noteToggle[0].length;
-                String noteString = "";
-                for (int i = 0; i < noteCount; i++) {
-                    noteString += "f";
-                }
-                s.setString(2, noteString);
+                s.setString(2, togglesToString());
+                s.setString(3, notesToString());
                 s.executeUpdate();
             });
         }
 
-        public PageState(String string) {
+        public PageState(String state, String notes) {
             id = pageStateList.size();
             pageStateList.add(this);
-            for (int i = 0; i < string.length(); i++) {
-                noteToggle[i / noteToggle[0].length][i % noteToggle[0].length] = string.charAt(i) == 't';
+            for (int i = 0; i < state.length(); i++) {
+                noteToggle[i / noteToggle[0].length][i % noteToggle[0].length] = state.charAt(i) == 't';
             }
+            note = notes.split(",");
         }
 
         void add(StateChange change) {
@@ -177,14 +200,26 @@ public class Server {
                 PreparedStatement s = conn.prepareStatement("UPDATE " + pageStateTableName + " SET state=? WHERE id=?");
                 statements.add(s);
 
-                s.setString(1, toString());
+                s.setString(1, togglesToString());
                 s.setInt(2, id);
                 s.executeUpdate();
             });
         }
 
-        @Override
-        public String toString() {
+        void add(NoteChange change) {
+            note[change.row] = change.note;
+
+            connectToDb((Connection conn, List<Statement> statements) -> {
+                PreparedStatement s = conn.prepareStatement("UPDATE " + pageStateTableName + " SET notes=? WHERE id=?");
+                statements.add(s);
+
+                s.setString(1, notesToString());
+                s.setInt(2, id);
+                s.executeUpdate();
+            });
+        }
+
+        public String togglesToString() {
             String response = "";
             for (int i = 0; i < noteToggle.length; i++) {
                 for (int j = 0; j < noteToggle[0].length; j++) {
@@ -192,6 +227,15 @@ public class Server {
                 }
             }
             return response;
+        }
+
+        public String notesToString() {
+            return String.join(",", note);
+        }
+
+        @Override
+        public String toString() {
+            return togglesToString() + "|" + notesToString();
         }
     }
 

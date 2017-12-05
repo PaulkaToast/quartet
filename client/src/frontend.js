@@ -236,7 +236,7 @@ class Circle {
 
         this.shape = new createjs.Shape();
 
-        this.text = new createjs.Text(this.sound, `${cSize / 80}px Helvetica`, this.color);
+        this.text = new createjs.Text('', `${cSize / 80}px Helvetica`, this.color);
         this.text.textAlign = 'center';
 
         stage.addChild(this.shape);
@@ -255,6 +255,7 @@ class Circle {
         this.text.x = this.x;
         this.text.y = this.y - (cSize / 160);
         this.text.font = `${cSize / 80}px Helvetica`;
+        this.text.text = sounds[this.row];
 
         this.shape.graphics.clear()
             .beginFill(this.color.setAlpha(this.clicked ? 0.5 : 0.1).toString())
@@ -354,7 +355,7 @@ function loadSound() {
     createjs.Sound.registerSound('sounds/E5.wav', sounds[7]);
 }
 function playSound(s) {
-    synth.triggerAttackRelease(s, `${60 / speed}s`);
+    synth.triggerAttackRelease(sounds[s], `${60 / speed}s`);
     // createjs.Sound.play(s);
 }
 
@@ -389,19 +390,49 @@ function initCanvas() {
         },
     };
     const request = http.request(params, (response) => {
+        let data = '';
         response.on('data', (chunk) => {
             for (let i = 0; i < chunk.length; i++) {
-                clicked.push(chunk[i]);
+                data += String.fromCharCode(chunk[i]);
             }
         });
         response.on('end', () => {
+            data = data.split('|');
+
+            for (let i = 0; i < data[0].length; i++) {
+                clicked.push(data[0][i]);
+            }
+
+            const noteList = data[1].split(',');
+            for (let i = 0; i < noteList.length; i++) {
+                sounds[i] = noteList[i];
+            }
+
+
+            const noteInputs = document.getElementById('notes');
+            const noteNames = ['A', 'Bb', 'B', 'C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab'];
+            for (let i = 0; i < sounds.length; i++) {
+                const noteRow = document.createElement('select');
+                noteRow.noteIndex = i;
+                for (let n = 0; n < noteNames.length * 9; n++) {
+                    const option = document.createElement('option');
+                    option.value = noteNames[n % noteNames.length] + Math.floor(n / noteNames.length);
+                    option.innerText = option.value;
+                    noteRow.appendChild(option);
+                }
+                noteRow.value = sounds[i];
+                noteRow.addEventListener('change', updateNote.bind(noteRow, noteRow));
+                noteInputs.appendChild(noteRow);
+                noteInputs.appendChild(document.createElement('br'));
+            }
+
             stage = new createjs.Stage(canvas);
             stage.enableMouseOver(30);
 
             for (let j = 0; j < rowNum; j++) {
                 for (let i = 0; i < colNum; i++) {
-                    const curr = new Circle(i, j, sounds[j]);
-                    if (clicked[i + j * colNum] === 116) {
+                    const curr = new Circle(i, j, j);
+                    if (clicked[i + j * colNum] === 't') {
                         curr.clicked = true;
                     }
                     circles.push(curr);
@@ -450,7 +481,7 @@ function tick(/* e */) {
             }
         }
         if (line.x < (colNum * (noteMargin + noteRadius * 2) * (cSize / sizeRatio))) {
-            line.x += speed / 120 * (cSize / sizeRatio);
+            line.x += (speed / 1800) * (noteMargin + noteRadius * 2) * (cSize / sizeRatio);
             line.draw();
             stage.update();
         } else {
@@ -473,4 +504,28 @@ function updateSpeed() {
     tempoInput.value = speed;
 }
 window.updateSpeed = updateSpeed;
+
+function updateNote(noteRow) {
+    sounds[noteRow.noteIndex] = noteRow.value;
+
+    const data = querystring.stringify({
+        row: noteRow.noteIndex,
+        note: noteRow.value,
+    });
+    const params = {
+        hostname: window.location.hostname,
+        port: window.location.port,
+        path: '/state',
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': data.length,
+        },
+    };
+    const request = http.request(params, () => { });
+    request.write(data);
+    request.end();
+
+    draw();
+}
 

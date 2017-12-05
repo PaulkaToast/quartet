@@ -22,7 +22,8 @@ class CreateTables implements SqlActions {
         statements.add(s);
         s.execute("create table " + pageStateTableName + "(" +
                 "id int," +
-                "state varchar(" + (17 * 16) + ")" +
+                "state varchar(" + (17 * 16) + ")," +
+                "notes varchar(" + (17 * 4) + ")" +
                 ")"
         );
         System.out.println("Created table " + pageStateTableName);

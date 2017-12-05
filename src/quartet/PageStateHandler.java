@@ -29,13 +29,16 @@ class PageStateHandler implements HttpHandler {
                     response = pageState.toString();
                     break;
                 case "PUT":
-                    StateChange change = new StateChange();
+                    StateChange stateChange = new StateChange();
+                    NoteChange noteChange = new NoteChange();
                     Map<String, String> query = parseQuery(readToString(he.getRequestBody()));
-                    if ( change.parse(query) ) {
-                        pageState.add(change);
+                    if ( stateChange.parse(query) ) {
+                        pageState.add(stateChange);
+                    } else if ( noteChange.parse(query) ) {
+                        pageState.add(noteChange);
                     } else {
                         responseCode = 400;
-                        response = "Malformed request body: " + change.error;
+                        response = "Malformed request body: " + stateChange.error;
                     }
                     break;
                 default:
