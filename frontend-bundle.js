@@ -5128,7 +5128,7 @@ var http = __webpack_require__(23);
 var querystring = __webpack_require__(18);
 
 // variables//
-var speed = 10;
+var speed = void 0;
 var stage = void 0;
 var ctx = void 0;
 var canvas = void 0;
@@ -5138,6 +5138,9 @@ var pause = void 0;
 var line = void 0;
 var stop = void 0;
 var cSize = void 0;
+
+var tempoInput = void 0;
+
 var circles = [];
 // const sounds = ['bang', 'clap', 'ding', 'ding2', 'pop', 'shutter', 'tap', 'valve'];
 var sounds = ['A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5', 'E5', 'F5', 'Gb5', 'G5', 'Ab5', 'A5', 'Bb5', 'B5', 'C6', 'Db6'];
@@ -5519,7 +5522,7 @@ function loadSound() {
     __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Sound.registerSound('sounds/E5.wav', sounds[7]);
 }
 function playSound(s) {
-    synth.triggerAttackRelease(s, '0.25s');
+    synth.triggerAttackRelease(s, 1 / speed + 's');
     // createjs.Sound.play(s);
 }
 
@@ -5540,6 +5543,8 @@ function initCanvas() {
     loadSound();
     canvas = document.getElementById('tutorial');
     ctx = canvas.getContext('2d');
+    tempoInput = document.getElementById('tempo-input');
+    updateSpeed();
 
     var params = {
         hostname: window.location.hostname,
@@ -5635,7 +5640,7 @@ function tick() /* e */{
         }
 
         if (line.x < colNum * (noteMargin + noteRadius * 2) * (cSize / sizeRatio)) {
-            line.x += speed * (cSize / sizeRatio);
+            line.x += speed * 2.5 * (cSize / sizeRatio);
             line.draw();
             stage.update();
         } else {
@@ -5643,6 +5648,12 @@ function tick() /* e */{
         }
     }
 }
+
+function updateSpeed() {
+    speed = Math.abs(parseFloat(tempoInput.value));
+    tempoInput.value = speed;
+}
+window.updateSpeed = updateSpeed;
 
 /***/ }),
 /* 20 */

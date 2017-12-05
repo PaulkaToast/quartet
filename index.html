@@ -28,6 +28,15 @@
                 right: 20px;
                 top: 20px;
             }
+            #params {
+                font-family: Helvetica;
+                position: absolute;
+                right: 0px;
+                top: 60px;
+                padding: 20px;
+                background-color: rgb(100,150,250);
+                border-radius: 10px 0px 0px 10px;
+            }
         </style>
     </head>
     <body onload="initCanvas();"
@@ -40,5 +49,10 @@
         <form id="signout" method="post" action="/">
             <input type="submit" name="signout" value="Sign Out"/>
         </form>
+        <div id="params">
+            <label> Tempo:
+                <input id="tempo-input" type="number" name="speed" min="0" onchange="updateSpeed()" onkeypress="updateSpeed()" value="4"/>
+            </label>
+        </div>
     </body>
 </html>
