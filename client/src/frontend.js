@@ -30,15 +30,10 @@ const sizeRatio = 1300;
 // Classes//
 class PauseButton {
     constructor() {
-        this.x = 150 * (cSize / sizeRatio);
-        this.y = cSize - (70 * (cSize / sizeRatio));
-        this.length = 51 * (cSize / sizeRatio);
-        this.width = 17 * (cSize / sizeRatio);
         this.color = new Color(247, 239, 0, 0.5);
 
         this.alphaStroke = 0.5;
         this.alphaFill = 0.1; // aplha fill
-        this.cSize = cSize;
         this.clicked = false;
 
         this.shape = new createjs.Shape();
@@ -50,9 +45,13 @@ class PauseButton {
         this.shape.on('mouseout', this.mouseOut.bind(this));
     }
     draw() {
+        this.x = 150 * (cSize / sizeRatio);
+        this.y = cSize - (70 * (cSize / sizeRatio));
+        this.length = 51 * (cSize / sizeRatio);
+        this.width = 17 * (cSize / sizeRatio);
         this.shape.graphics.clear()
             .beginFill(this.color.setAlpha(this.alphaFill).toString())
-            .setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round')
+            .setStrokeStyle(3 * (cSize / sizeRatio), 'round', 'round')
             .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
             .drawRect(this.x + (this.width * 2), this.y, this.width, this.length)
             .drawRect(this.x + (this.width * 4), this.y, this.width, this.length)
@@ -93,14 +92,10 @@ class PauseButton {
 }
 class StopButton {
     constructor() {
-        this.x = 20 * (cSize / sizeRatio);
-        this.y = cSize - (70 * (cSize / sizeRatio));
-        this.side = 51 * (cSize / sizeRatio);
         this.color = new Color(247, 0, 0, 0.5);
 
         this.alphaStroke = 0.5;
         this.alphaFill = 0.1;
-        this.cSize = cSize;
         this.clicked = false;
 
         this.shape = new createjs.Shape();
@@ -112,9 +107,13 @@ class StopButton {
         this.shape.on('mouseout', this.mouseOut.bind(this));
     }
     draw() {
+        this.x = 20 * (cSize / sizeRatio);
+        this.y = cSize - (70 * (cSize / sizeRatio));
+        this.side = 51 * (cSize / sizeRatio);
+
         this.shape.graphics.clear()
             .beginFill(this.color.setAlpha(this.alphaFill).toString())
-            .setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round')
+            .setStrokeStyle(3 * (cSize / sizeRatio), 'round', 'round')
             .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
             .drawRect(this.x, this.y, this.side, this.side)
             .endFill()
@@ -154,14 +153,10 @@ class StopButton {
 }
 class PlayButton {
     constructor() {
-        this.x = 100 * (cSize / sizeRatio);
-        this.y = cSize - (70 * (cSize / sizeRatio));
-        this.side = 51 * (cSize / sizeRatio);
         this.color = new Color(0, 237, 27, 0.5);
 
         this.alphaStroke = 0.5; // aplha
         this.alphaFill = 0.1; // aplha fill
-        this.cSize = cSize;
         this.clicked = false;
 
         this.shape = new createjs.Shape();
@@ -173,9 +168,13 @@ class PlayButton {
         this.shape.on('mouseout', this.mouseOut.bind(this));
     }
     draw() {
+        this.x = 100 * (cSize / sizeRatio);
+        this.y = cSize - (70 * (cSize / sizeRatio));
+        this.side = 51 * (cSize / sizeRatio);
+
         this.shape.graphics.clear()
             .beginFill(this.color.setAlpha(this.alphaFill).toString())
-            .setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round')
+            .setStrokeStyle(3 * (cSize / sizeRatio), 'round', 'round')
             .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
             .moveTo(this.x, this.y)
             .lineTo(this.x, this.y + this.side)
@@ -222,9 +221,6 @@ class Circle {
         this.sound = s;
         this.column = i;
         this.row = j;
-        this.radius = noteRadius * (cSize / sizeRatio); // radius
-        this.x = (noteRadius + noteMargin + i * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // x cordinate
-        this.y = (noteRadius + noteMargin + j * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // y cordinate
         this.color = new Color(
             0,
             Math.floor(255 - (5 * j)),
@@ -232,17 +228,12 @@ class Circle {
             0.5);
 
         this.alphaStroke = 0.5; // aplha
-        this.cSize = cSize;
         this.clicked = false;
         this.played = false;
 
         this.shape = new createjs.Shape();
-        this.shape.x = this.x;
-        this.shape.y = this.y;
 
-        this.text = new createjs.Text(this.sound, `${cSize / 80}px Arial`, this.color);
-        this.text.x = this.x;
-        this.text.y = this.y - (cSize / 160);
+        this.text = new createjs.Text(this.sound, `${cSize / 80}px Helvetica`, this.color);
         this.text.textAlign = 'center';
 
         stage.addChild(this.shape);
@@ -253,9 +244,18 @@ class Circle {
     }
 
     draw() {
+        this.radius = noteRadius * (cSize / sizeRatio); // radius
+        this.x = (noteRadius + noteMargin + this.column * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // x cordinate
+        this.y = (noteRadius + noteMargin + this.row * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // y cordinate
+        this.shape.x = this.x;
+        this.shape.y = this.y;
+        this.text.x = this.x;
+        this.text.y = this.y - (cSize / 160);
+        this.text.font = `${cSize / 80}px Helvetica`;
+
         this.shape.graphics.clear()
             .beginFill(this.color.setAlpha(this.clicked ? 0.5 : 0.1).toString())
-            .setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round')
+            .setStrokeStyle(3 * (cSize / sizeRatio), 'round', 'round')
             .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
             .drawCircle(0, 0, this.radius)
             .endFill()
@@ -303,10 +303,7 @@ class Line {
     constructor() {
         this.x = 0; // x cordinate
         this.y = 0; // y cordinate
-        this.length = (noteRadius * 2 * rowNum + noteMargin * (rowNum + 1)) * (cSize / sizeRatio);
         this.color = new Color(255, 0, 0, 0.5);
-
-        this.cSize = cSize;
         this.moving = false;
 
         this.shape = new createjs.Shape();
@@ -316,6 +313,8 @@ class Line {
     }
 
     draw() {
+        this.length = (noteRadius * 2 * rowNum + noteMargin * (rowNum + 1)) * (cSize / sizeRatio);
+
         if (stop.clicked) {
             this.color = new Color(255, 0, 0, 0.5);
             this.x = 0;
@@ -327,7 +326,7 @@ class Line {
             this.color = new Color(247, 239, 0, 0.5);
         }
         this.shape.graphics.clear()
-            .setStrokeStyle(15 * (this.cSize / sizeRatio), 'round', 'round')
+            .setStrokeStyle(15 * (cSize / sizeRatio), 'round', 'round')
             .beginStroke(this.color.toString())
             .moveTo(this.x, this.y)
             .lineTo(this.x, this.length)
@@ -357,37 +356,15 @@ function playSound(s) {
 }
 
 const clicked = [];
-function draw() {
-    stage = new createjs.Stage(canvas);
-    stage.enableMouseOver(30);
-    cSize = 0;
-    if (ctx.canvas.width > ctx.canvas.height) {
-        cSize = ctx.canvas.height;
-    } else {
-        cSize = ctx.canvas.width;
-    }
 
-    for (let j = 0; j < rowNum; j++) {
-        for (let i = 0; i < colNum; i++) {
-            const curr = new Circle(i, j, sounds[j]);
-            if (clicked[i + j * colNum] === 116) {
-                curr.clicked = true;
-            }
-            circles.push(curr);
-            curr.draw();
-        }
+function draw() {
+    for (let i = 0; i < circles.length; i++) {
+        circles[i].draw();
     }
-    play = new PlayButton();
     play.draw();
-    stop = new StopButton();
     stop.draw();
-    pause = new PauseButton();
     pause.draw();
-    line = new Line();
     line.draw();
-    createjs.Ticker.interval = 1;
-    createjs.Ticker.framerate = 30;
-    createjs.Ticker.addEventListener('tick', tick);
 
     stage.update();
 }
@@ -395,8 +372,6 @@ function initCanvas() {
     loadSound();
     canvas = document.getElementById('tutorial');
     ctx = canvas.getContext('2d');
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
 
     const params = {
         hostname: window.location.hostname,
@@ -415,7 +390,28 @@ function initCanvas() {
             }
         });
         response.on('end', () => {
-            draw();
+            stage = new createjs.Stage(canvas);
+            stage.enableMouseOver(30);
+
+            for (let j = 0; j < rowNum; j++) {
+                for (let i = 0; i < colNum; i++) {
+                    const curr = new Circle(i, j, sounds[j]);
+                    if (clicked[i + j * colNum] === 116) {
+                        curr.clicked = true;
+                    }
+                    circles.push(curr);
+                }
+            }
+
+            play = new PlayButton();
+            stop = new StopButton();
+            pause = new PauseButton();
+            line = new Line();
+            createjs.Ticker.interval = 1;
+            createjs.Ticker.framerate = 30;
+            createjs.Ticker.addEventListener('tick', tick);
+
+            window.reInitCanvas();
         });
     });
     request.end();
@@ -425,6 +421,13 @@ function reInitCanvas() {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
+
+    cSize = 0;
+    if (ctx.canvas.width > ctx.canvas.height) {
+        cSize = ctx.canvas.height;
+    } else {
+        cSize = ctx.canvas.width;
+    }
 
     draw();
 }

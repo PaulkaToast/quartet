@@ -5155,15 +5155,10 @@ var PauseButton = function () {
     function PauseButton() {
         _classCallCheck(this, PauseButton);
 
-        this.x = 150 * (cSize / sizeRatio);
-        this.y = cSize - 70 * (cSize / sizeRatio);
-        this.length = 51 * (cSize / sizeRatio);
-        this.width = 17 * (cSize / sizeRatio);
         this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](247, 239, 0, 0.5);
 
         this.alphaStroke = 0.5;
         this.alphaFill = 0.1; // aplha fill
-        this.cSize = cSize;
         this.clicked = false;
 
         this.shape = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Shape();
@@ -5178,7 +5173,11 @@ var PauseButton = function () {
     _createClass(PauseButton, [{
         key: 'draw',
         value: function draw() {
-            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawRect(this.x + this.width * 2, this.y, this.width, this.length).drawRect(this.x + this.width * 4, this.y, this.width, this.length).endFill().endStroke();
+            this.x = 150 * (cSize / sizeRatio);
+            this.y = cSize - 70 * (cSize / sizeRatio);
+            this.length = 51 * (cSize / sizeRatio);
+            this.width = 17 * (cSize / sizeRatio);
+            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawRect(this.x + this.width * 2, this.y, this.width, this.length).drawRect(this.x + this.width * 4, this.y, this.width, this.length).endFill().endStroke();
         }
     }, {
         key: 'drawAndUpdate',
@@ -5230,14 +5229,10 @@ var StopButton = function () {
     function StopButton() {
         _classCallCheck(this, StopButton);
 
-        this.x = 20 * (cSize / sizeRatio);
-        this.y = cSize - 70 * (cSize / sizeRatio);
-        this.side = 51 * (cSize / sizeRatio);
         this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](247, 0, 0, 0.5);
 
         this.alphaStroke = 0.5;
         this.alphaFill = 0.1;
-        this.cSize = cSize;
         this.clicked = false;
 
         this.shape = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Shape();
@@ -5252,7 +5247,11 @@ var StopButton = function () {
     _createClass(StopButton, [{
         key: 'draw',
         value: function draw() {
-            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawRect(this.x, this.y, this.side, this.side).endFill().endStroke();
+            this.x = 20 * (cSize / sizeRatio);
+            this.y = cSize - 70 * (cSize / sizeRatio);
+            this.side = 51 * (cSize / sizeRatio);
+
+            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawRect(this.x, this.y, this.side, this.side).endFill().endStroke();
         }
     }, {
         key: 'drawAndUpdate',
@@ -5304,14 +5303,10 @@ var PlayButton = function () {
     function PlayButton() {
         _classCallCheck(this, PlayButton);
 
-        this.x = 100 * (cSize / sizeRatio);
-        this.y = cSize - 70 * (cSize / sizeRatio);
-        this.side = 51 * (cSize / sizeRatio);
         this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](0, 237, 27, 0.5);
 
         this.alphaStroke = 0.5; // aplha
         this.alphaFill = 0.1; // aplha fill
-        this.cSize = cSize;
         this.clicked = false;
 
         this.shape = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Shape();
@@ -5326,7 +5321,11 @@ var PlayButton = function () {
     _createClass(PlayButton, [{
         key: 'draw',
         value: function draw() {
-            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).moveTo(this.x, this.y).lineTo(this.x, this.y + this.side).lineTo(this.x + this.side, this.y + this.side / 2).lineTo(this.x, this.y).endFill().endStroke();
+            this.x = 100 * (cSize / sizeRatio);
+            this.y = cSize - 70 * (cSize / sizeRatio);
+            this.side = 51 * (cSize / sizeRatio);
+
+            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).moveTo(this.x, this.y).lineTo(this.x, this.y + this.side).lineTo(this.x + this.side, this.y + this.side / 2).lineTo(this.x, this.y).endFill().endStroke();
         }
     }, {
         key: 'drawAndUpdate',
@@ -5381,23 +5380,15 @@ var Circle = function () {
         this.sound = s;
         this.column = i;
         this.row = j;
-        this.radius = noteRadius * (cSize / sizeRatio); // radius
-        this.x = (noteRadius + noteMargin + i * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // x cordinate
-        this.y = (noteRadius + noteMargin + j * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // y cordinate
         this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](0, Math.floor(255 - 5 * j), Math.floor(255 - 25 * i), 0.5);
 
         this.alphaStroke = 0.5; // aplha
-        this.cSize = cSize;
         this.clicked = false;
         this.played = false;
 
         this.shape = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Shape();
-        this.shape.x = this.x;
-        this.shape.y = this.y;
 
-        this.text = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Text(this.sound, cSize / 80 + 'px Arial', this.color);
-        this.text.x = this.x;
-        this.text.y = this.y - cSize / 160;
+        this.text = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Text(this.sound, cSize / 80 + 'px Helvetica', this.color);
         this.text.textAlign = 'center';
 
         stage.addChild(this.shape);
@@ -5410,7 +5401,16 @@ var Circle = function () {
     _createClass(Circle, [{
         key: 'draw',
         value: function draw() {
-            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.clicked ? 0.5 : 0.1).toString()).setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawCircle(0, 0, this.radius).endFill().endStroke();
+            this.radius = noteRadius * (cSize / sizeRatio); // radius
+            this.x = (noteRadius + noteMargin + this.column * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // x cordinate
+            this.y = (noteRadius + noteMargin + this.row * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // y cordinate
+            this.shape.x = this.x;
+            this.shape.y = this.y;
+            this.text.x = this.x;
+            this.text.y = this.y - cSize / 160;
+            this.text.font = cSize / 80 + 'px Helvetica';
+
+            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.clicked ? 0.5 : 0.1).toString()).setStrokeStyle(3 * (cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawCircle(0, 0, this.radius).endFill().endStroke();
         }
     }, {
         key: 'drawAndUpdate',
@@ -5468,10 +5468,7 @@ var Line = function () {
 
         this.x = 0; // x cordinate
         this.y = 0; // y cordinate
-        this.length = (noteRadius * 2 * rowNum + noteMargin * (rowNum + 1)) * (cSize / sizeRatio);
         this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](255, 0, 0, 0.5);
-
-        this.cSize = cSize;
         this.moving = false;
 
         this.shape = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Shape();
@@ -5483,6 +5480,8 @@ var Line = function () {
     _createClass(Line, [{
         key: 'draw',
         value: function draw() {
+            this.length = (noteRadius * 2 * rowNum + noteMargin * (rowNum + 1)) * (cSize / sizeRatio);
+
             if (stop.clicked) {
                 this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](255, 0, 0, 0.5);
                 this.x = 0;
@@ -5493,7 +5492,7 @@ var Line = function () {
             if (pause.clicked) {
                 this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](247, 239, 0, 0.5);
             }
-            this.shape.graphics.clear().setStrokeStyle(15 * (this.cSize / sizeRatio), 'round', 'round').beginStroke(this.color.toString()).moveTo(this.x, this.y).lineTo(this.x, this.length).endStroke();
+            this.shape.graphics.clear().setStrokeStyle(15 * (cSize / sizeRatio), 'round', 'round').beginStroke(this.color.toString()).moveTo(this.x, this.y).lineTo(this.x, this.length).endStroke();
         }
     }, {
         key: 'drawAndUpdate',
@@ -5525,37 +5524,15 @@ function playSound(s) {
 }
 
 var clicked = [];
-function draw() {
-    stage = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Stage(canvas);
-    stage.enableMouseOver(30);
-    cSize = 0;
-    if (ctx.canvas.width > ctx.canvas.height) {
-        cSize = ctx.canvas.height;
-    } else {
-        cSize = ctx.canvas.width;
-    }
 
-    for (var j = 0; j < rowNum; j++) {
-        for (var i = 0; i < colNum; i++) {
-            var curr = new Circle(i, j, sounds[j]);
-            if (clicked[i + j * colNum] === 116) {
-                curr.clicked = true;
-            }
-            circles.push(curr);
-            curr.draw();
-        }
+function draw() {
+    for (var i = 0; i < circles.length; i++) {
+        circles[i].draw();
     }
-    play = new PlayButton();
     play.draw();
-    stop = new StopButton();
     stop.draw();
-    pause = new PauseButton();
     pause.draw();
-    line = new Line();
     line.draw();
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Ticker.interval = 1;
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Ticker.framerate = 30;
-    __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Ticker.addEventListener('tick', tick);
 
     stage.update();
 }
@@ -5563,8 +5540,6 @@ function initCanvas() {
     loadSound();
     canvas = document.getElementById('tutorial');
     ctx = canvas.getContext('2d');
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
 
     var params = {
         hostname: window.location.hostname,
@@ -5583,7 +5558,28 @@ function initCanvas() {
             }
         });
         response.on('end', function () {
-            draw();
+            stage = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Stage(canvas);
+            stage.enableMouseOver(30);
+
+            for (var j = 0; j < rowNum; j++) {
+                for (var i = 0; i < colNum; i++) {
+                    var curr = new Circle(i, j, sounds[j]);
+                    if (clicked[i + j * colNum] === 116) {
+                        curr.clicked = true;
+                    }
+                    circles.push(curr);
+                }
+            }
+
+            play = new PlayButton();
+            stop = new StopButton();
+            pause = new PauseButton();
+            line = new Line();
+            __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Ticker.interval = 1;
+            __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Ticker.framerate = 30;
+            __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Ticker.addEventListener('tick', tick);
+
+            window.reInitCanvas();
         });
     });
     request.end();
@@ -5593,6 +5589,13 @@ function reInitCanvas() {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
+
+    cSize = 0;
+    if (ctx.canvas.width > ctx.canvas.height) {
+        cSize = ctx.canvas.height;
+    } else {
+        cSize = ctx.canvas.width;
+    }
 
     draw();
 }
