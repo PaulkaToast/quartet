@@ -25,21 +25,25 @@ public class Server {
     public static Map<String, UserSession> sessionList = new HashMap<>();
 
     public static void main(String[] args) throws Exception {
+        // Intialize server on an unused port
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
+        // Initialize connection to database (connection cannot be established more than once)
         initConnection();
 
+        // Read the list of page states from the database
         connectToDb((Connection conn, List< Statement > statements) -> {
             Statement s = conn.createStatement();
             statements.add(s);
 
             ResultSet rs = s.executeQuery("SELECT state FROM " + pageStateTableName + " ORDER BY id");
             while ( rs.next() ) {
-                pageStateList.add(new PageState(rs.getString(1)));
+                new PageState(rs.getString(1));
             }
             if (rs != null) rs.close();
         });
 
+        // Set handlers for each url sub-pattern
         server.createContext("/", new MainPageHandler());
         server.createContext("/frontend-bundle.js", new JavaScriptHandler());
         server.createContext("/images", new ImageHandler());
@@ -137,10 +141,12 @@ public class Server {
     }
 
     static class PageState {
+        int id;
         boolean noteToggle[][] = new boolean[17][16];
 
         public PageState() {
-            int id = pageStateList.size();
+            id = pageStateList.size();
+            pageStateList.add(this);
             connectToDb((Connection conn, List< Statement > statements) -> {
                 PreparedStatement s = conn.prepareStatement("INSERT INTO " + pageStateTableName + " VALUES (?, ?)");
                 statements.add(s);
@@ -157,6 +163,8 @@ public class Server {
         }
 
         public PageState(String string) {
+            id = pageStateList.size();
+            pageStateList.add(this);
             for (int i = 0; i < string.length(); i++) {
                 noteToggle[i / noteToggle[0].length][i % noteToggle[0].length] = string.charAt(i) == 't';
             }
@@ -164,6 +172,15 @@ public class Server {
 
         void add(StateChange change) {
             noteToggle[change.row][change.col] = change.toggle;
+
+            connectToDb((Connection conn, List<Statement> statements) -> {
+                PreparedStatement s = conn.prepareStatement("UPDATE " + pageStateTableName + " SET state=? WHERE id=?");
+                statements.add(s);
+
+                s.setString(1, toString());
+                s.setInt(2, id);
+                s.executeUpdate();
+            });
         }
 
         @Override

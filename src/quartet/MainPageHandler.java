@@ -70,8 +70,7 @@ class MainPageHandler implements HttpHandler {
                     } else {
 
                         PageState ps = new PageState();
-                        pageStateList.add(ps);
-                        final int pageStateId = pageStateList.size() - 1;
+                        final int pageStateId = ps.id;
 
                         connectToDb((Connection conn, List<Statement> statements) -> {
 
