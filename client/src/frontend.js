@@ -354,7 +354,7 @@ function loadSound() {
     createjs.Sound.registerSound('sounds/E5.wav', sounds[7]);
 }
 function playSound(s) {
-    synth.triggerAttackRelease(s, `${1 / speed}s`);
+    synth.triggerAttackRelease(s, `${60 / speed}s`);
     // createjs.Sound.play(s);
 }
 
@@ -450,7 +450,7 @@ function tick(/* e */) {
             }
         }
         if (line.x < (colNum * (noteMargin + noteRadius * 2) * (cSize / sizeRatio))) {
-            line.x += speed * 2 * (cSize / sizeRatio);
+            line.x += speed / 120 * (cSize / sizeRatio);
             line.draw();
             stage.update();
         } else {

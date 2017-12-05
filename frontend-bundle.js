@@ -5640,7 +5640,7 @@ function tick() /* e */{
         }
 
         if (line.x < colNum * (noteMargin + noteRadius * 2) * (cSize / sizeRatio)) {
-            line.x += speed * 2 * (cSize / sizeRatio);
+            line.x += speed / 120 * (cSize / sizeRatio);
             line.draw();
             stage.update();
         } else {
