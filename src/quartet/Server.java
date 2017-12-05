@@ -137,7 +137,7 @@ public class Server {
     }
 
     static class PageState {
-        boolean noteToggle[][] = new boolean[8][8];
+        boolean noteToggle[][] = new boolean[17][16];
 
         public PageState() {
             int id = pageStateList.size();
@@ -146,7 +146,7 @@ public class Server {
                 statements.add(s);
 
                 s.setInt(1, id);
-                int noteCount = noteToggle.length * noteToggle.length;
+                int noteCount = noteToggle.length * noteToggle[0].length;
                 String noteString = "";
                 for (int i = 0; i < noteCount; i++) {
                     noteString += "f";
@@ -158,7 +158,7 @@ public class Server {
 
         public PageState(String string) {
             for (int i = 0; i < string.length(); i++) {
-                noteToggle[i / 8][i % 8] = string.charAt(i) == 't';
+                noteToggle[i / noteToggle[0].length][i % noteToggle[0].length] = string.charAt(i) == 't';
             }
         }
 

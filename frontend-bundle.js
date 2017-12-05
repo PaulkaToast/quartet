@@ -5140,8 +5140,14 @@ var stop = void 0;
 var cSize = void 0;
 var circles = [];
 // const sounds = ['bang', 'clap', 'ding', 'ding2', 'pop', 'shutter', 'tap', 'valve'];
-var sounds = ['A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5', 'E5'];
-var synth = new __WEBPACK_IMPORTED_MODULE_1_tone___default.a.PolySynth(8, __WEBPACK_IMPORTED_MODULE_1_tone___default.a.Synth).toMaster();
+var sounds = ['A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5', 'E5', 'F5', 'Gb5', 'G5', 'Ab5', 'A5', 'Bb5', 'B5', 'C6', 'Db6'];
+var rowNum = sounds.length;
+var colNum = 16;
+var synth = new __WEBPACK_IMPORTED_MODULE_1_tone___default.a.PolySynth(rowNum, __WEBPACK_IMPORTED_MODULE_1_tone___default.a.Synth).toMaster();
+
+var noteRadius = 30;
+var noteMargin = 10;
+var sizeRatio = 1300;
 
 // Classes//
 
@@ -5149,10 +5155,10 @@ var PauseButton = function () {
     function PauseButton() {
         _classCallCheck(this, PauseButton);
 
-        this.x = 150 * (cSize / 650);
-        this.y = cSize - 70 * (cSize / 650);
-        this.length = 51 * (cSize / 650);
-        this.width = 17 * (cSize / 650);
+        this.x = 150 * (cSize / sizeRatio);
+        this.y = cSize - 70 * (cSize / sizeRatio);
+        this.length = 51 * (cSize / sizeRatio);
+        this.width = 17 * (cSize / sizeRatio);
         this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](247, 239, 0, 0.5);
 
         this.alphaStroke = 0.5;
@@ -5172,7 +5178,7 @@ var PauseButton = function () {
     _createClass(PauseButton, [{
         key: 'draw',
         value: function draw() {
-            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (this.cSize / 650), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawRect(this.x + this.width * 2, this.y, this.width, this.length).drawRect(this.x + this.width * 4, this.y, this.width, this.length).endFill().endStroke();
+            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawRect(this.x + this.width * 2, this.y, this.width, this.length).drawRect(this.x + this.width * 4, this.y, this.width, this.length).endFill().endStroke();
         }
     }, {
         key: 'drawAndUpdate',
@@ -5224,9 +5230,9 @@ var StopButton = function () {
     function StopButton() {
         _classCallCheck(this, StopButton);
 
-        this.x = 20 * (cSize / 650);
-        this.y = cSize - 70 * (cSize / 650);
-        this.side = 51 * (cSize / 650);
+        this.x = 20 * (cSize / sizeRatio);
+        this.y = cSize - 70 * (cSize / sizeRatio);
+        this.side = 51 * (cSize / sizeRatio);
         this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](247, 0, 0, 0.5);
 
         this.alphaStroke = 0.5;
@@ -5246,7 +5252,7 @@ var StopButton = function () {
     _createClass(StopButton, [{
         key: 'draw',
         value: function draw() {
-            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (this.cSize / 650), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawRect(this.x, this.y, this.side, this.side).endFill().endStroke();
+            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawRect(this.x, this.y, this.side, this.side).endFill().endStroke();
         }
     }, {
         key: 'drawAndUpdate',
@@ -5298,9 +5304,9 @@ var PlayButton = function () {
     function PlayButton() {
         _classCallCheck(this, PlayButton);
 
-        this.x = 100 * (cSize / 650);
-        this.y = cSize - 70 * (cSize / 650);
-        this.side = 51 * (cSize / 650);
+        this.x = 100 * (cSize / sizeRatio);
+        this.y = cSize - 70 * (cSize / sizeRatio);
+        this.side = 51 * (cSize / sizeRatio);
         this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](0, 237, 27, 0.5);
 
         this.alphaStroke = 0.5; // aplha
@@ -5320,7 +5326,7 @@ var PlayButton = function () {
     _createClass(PlayButton, [{
         key: 'draw',
         value: function draw() {
-            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (this.cSize / 650), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).moveTo(this.x, this.y).lineTo(this.x, this.y + this.side).lineTo(this.x + this.side, this.y + this.side / 2).lineTo(this.x, this.y).endFill().endStroke();
+            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.alphaFill).toString()).setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).moveTo(this.x, this.y).lineTo(this.x, this.y + this.side).lineTo(this.x + this.side, this.y + this.side / 2).lineTo(this.x, this.y).endFill().endStroke();
         }
     }, {
         key: 'drawAndUpdate',
@@ -5375,9 +5381,9 @@ var Circle = function () {
         this.sound = s;
         this.column = i;
         this.row = j;
-        this.radius = 30 * (cSize / 650); // radius
-        this.x = (40 + i * 70) * (cSize / 650); // x cordinate
-        this.y = (40 + j * 70) * (cSize / 650); // y cordinate
+        this.radius = noteRadius * (cSize / sizeRatio); // radius
+        this.x = (noteRadius + noteMargin + i * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // x cordinate
+        this.y = (noteRadius + noteMargin + j * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // y cordinate
         this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](0, Math.floor(255 - 5 * j), Math.floor(255 - 25 * i), 0.5);
 
         this.alphaStroke = 0.5; // aplha
@@ -5389,9 +5395,9 @@ var Circle = function () {
         this.shape.x = this.x;
         this.shape.y = this.y;
 
-        this.text = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Text(this.sound, cSize / 50 + 'px Arial', this.color);
+        this.text = new __WEBPACK_IMPORTED_MODULE_0_createjs___default.a.Text(this.sound, cSize / 80 + 'px Arial', this.color);
         this.text.x = this.x;
-        this.text.y = this.y - cSize / 100;
+        this.text.y = this.y - cSize / 160;
         this.text.textAlign = 'center';
 
         stage.addChild(this.shape);
@@ -5404,7 +5410,7 @@ var Circle = function () {
     _createClass(Circle, [{
         key: 'draw',
         value: function draw() {
-            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.clicked ? 0.5 : 0.1).toString()).setStrokeStyle(3 * (this.cSize / 650), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawCircle(0, 0, this.radius).endFill().endStroke();
+            this.shape.graphics.clear().beginFill(this.color.setAlpha(this.clicked ? 0.5 : 0.1).toString()).setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round').beginStroke(this.color.setAlpha(this.alphaStroke).toString()).drawCircle(0, 0, this.radius).endFill().endStroke();
         }
     }, {
         key: 'drawAndUpdate',
@@ -5462,7 +5468,7 @@ var Line = function () {
 
         this.x = 0; // x cordinate
         this.y = 0; // y cordinate
-        this.length = 560 * (cSize / 650);
+        this.length = (noteRadius * 2 * rowNum + noteMargin * (rowNum + 1)) * (cSize / sizeRatio);
         this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](255, 0, 0, 0.5);
 
         this.cSize = cSize;
@@ -5487,7 +5493,7 @@ var Line = function () {
             if (pause.clicked) {
                 this.color = new __WEBPACK_IMPORTED_MODULE_2__color__["a" /* default */](247, 239, 0, 0.5);
             }
-            this.shape.graphics.clear().setStrokeStyle(15 * (this.cSize / 650), 'round', 'round').beginStroke(this.color.toString()).moveTo(this.x, this.y).lineTo(this.x, this.length).endStroke();
+            this.shape.graphics.clear().setStrokeStyle(15 * (this.cSize / sizeRatio), 'round', 'round').beginStroke(this.color.toString()).moveTo(this.x, this.y).lineTo(this.x, this.length).endStroke();
         }
     }, {
         key: 'drawAndUpdate',
@@ -5529,10 +5535,10 @@ function draw() {
         cSize = ctx.canvas.width;
     }
 
-    for (var i = 0; i < 8; i++) {
-        for (var j = 0; j < 8; j++) {
+    for (var j = 0; j < rowNum; j++) {
+        for (var i = 0; i < colNum; i++) {
             var curr = new Circle(i, j, sounds[j]);
-            if (clicked[i + j * 8] === 116) {
+            if (clicked[i + j * colNum] === 116) {
                 curr.clicked = true;
             }
             circles.push(curr);
@@ -5625,8 +5631,8 @@ function tick() /* e */{
             }
         }
 
-        if (line.x < 560 * (cSize / 650)) {
-            line.x += speed * (cSize / 650);
+        if (line.x < colNum * (noteMargin + noteRadius * 2) * (cSize / sizeRatio)) {
+            line.x += speed * (cSize / sizeRatio);
             line.draw();
             stage.update();
         } else {

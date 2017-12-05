@@ -18,16 +18,22 @@ let stop;
 let cSize;
 const circles = [];
 // const sounds = ['bang', 'clap', 'ding', 'ding2', 'pop', 'shutter', 'tap', 'valve'];
-const sounds = ['A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5', 'E5'];
-const synth = new Tone.PolySynth(8, Tone.Synth).toMaster();
+const sounds = ['A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5', 'E5', 'F5', 'Gb5', 'G5', 'Ab5', 'A5', 'Bb5', 'B5', 'C6', 'Db6'];
+const rowNum = sounds.length;
+const colNum = 16;
+const synth = new Tone.PolySynth(rowNum, Tone.Synth).toMaster();
+
+const noteRadius = 30;
+const noteMargin = 10;
+const sizeRatio = 1300;
 
 // Classes//
 class PauseButton {
     constructor() {
-        this.x = 150 * (cSize / 650);
-        this.y = cSize - (70 * (cSize / 650));
-        this.length = 51 * (cSize / 650);
-        this.width = 17 * (cSize / 650);
+        this.x = 150 * (cSize / sizeRatio);
+        this.y = cSize - (70 * (cSize / sizeRatio));
+        this.length = 51 * (cSize / sizeRatio);
+        this.width = 17 * (cSize / sizeRatio);
         this.color = new Color(247, 239, 0, 0.5);
 
         this.alphaStroke = 0.5;
@@ -46,7 +52,7 @@ class PauseButton {
     draw() {
         this.shape.graphics.clear()
             .beginFill(this.color.setAlpha(this.alphaFill).toString())
-            .setStrokeStyle(3 * (this.cSize / 650), 'round', 'round')
+            .setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round')
             .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
             .drawRect(this.x + (this.width * 2), this.y, this.width, this.length)
             .drawRect(this.x + (this.width * 4), this.y, this.width, this.length)
@@ -87,9 +93,9 @@ class PauseButton {
 }
 class StopButton {
     constructor() {
-        this.x = 20 * (cSize / 650);
-        this.y = cSize - (70 * (cSize / 650));
-        this.side = 51 * (cSize / 650);
+        this.x = 20 * (cSize / sizeRatio);
+        this.y = cSize - (70 * (cSize / sizeRatio));
+        this.side = 51 * (cSize / sizeRatio);
         this.color = new Color(247, 0, 0, 0.5);
 
         this.alphaStroke = 0.5;
@@ -108,7 +114,7 @@ class StopButton {
     draw() {
         this.shape.graphics.clear()
             .beginFill(this.color.setAlpha(this.alphaFill).toString())
-            .setStrokeStyle(3 * (this.cSize / 650), 'round', 'round')
+            .setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round')
             .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
             .drawRect(this.x, this.y, this.side, this.side)
             .endFill()
@@ -148,9 +154,9 @@ class StopButton {
 }
 class PlayButton {
     constructor() {
-        this.x = 100 * (cSize / 650);
-        this.y = cSize - (70 * (cSize / 650));
-        this.side = 51 * (cSize / 650);
+        this.x = 100 * (cSize / sizeRatio);
+        this.y = cSize - (70 * (cSize / sizeRatio));
+        this.side = 51 * (cSize / sizeRatio);
         this.color = new Color(0, 237, 27, 0.5);
 
         this.alphaStroke = 0.5; // aplha
@@ -169,7 +175,7 @@ class PlayButton {
     draw() {
         this.shape.graphics.clear()
             .beginFill(this.color.setAlpha(this.alphaFill).toString())
-            .setStrokeStyle(3 * (this.cSize / 650), 'round', 'round')
+            .setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round')
             .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
             .moveTo(this.x, this.y)
             .lineTo(this.x, this.y + this.side)
@@ -216,9 +222,9 @@ class Circle {
         this.sound = s;
         this.column = i;
         this.row = j;
-        this.radius = 30 * (cSize / 650); // radius
-        this.x = (40 + (i * 70)) * (cSize / 650); // x cordinate
-        this.y = (40 + (j * 70)) * (cSize / 650); // y cordinate
+        this.radius = noteRadius * (cSize / sizeRatio); // radius
+        this.x = (noteRadius + noteMargin + i * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // x cordinate
+        this.y = (noteRadius + noteMargin + j * (noteRadius * 2 + noteMargin)) * (cSize / sizeRatio); // y cordinate
         this.color = new Color(
             0,
             Math.floor(255 - (5 * j)),
@@ -234,9 +240,9 @@ class Circle {
         this.shape.x = this.x;
         this.shape.y = this.y;
 
-        this.text = new createjs.Text(this.sound, `${cSize / 50}px Arial`, this.color);
+        this.text = new createjs.Text(this.sound, `${cSize / 80}px Arial`, this.color);
         this.text.x = this.x;
-        this.text.y = this.y - (cSize / 100);
+        this.text.y = this.y - (cSize / 160);
         this.text.textAlign = 'center';
 
         stage.addChild(this.shape);
@@ -249,7 +255,7 @@ class Circle {
     draw() {
         this.shape.graphics.clear()
             .beginFill(this.color.setAlpha(this.clicked ? 0.5 : 0.1).toString())
-            .setStrokeStyle(3 * (this.cSize / 650), 'round', 'round')
+            .setStrokeStyle(3 * (this.cSize / sizeRatio), 'round', 'round')
             .beginStroke(this.color.setAlpha(this.alphaStroke).toString())
             .drawCircle(0, 0, this.radius)
             .endFill()
@@ -297,7 +303,7 @@ class Line {
     constructor() {
         this.x = 0; // x cordinate
         this.y = 0; // y cordinate
-        this.length = 560 * (cSize / 650);
+        this.length = (noteRadius * 2 * rowNum + noteMargin * (rowNum + 1)) * (cSize / sizeRatio);
         this.color = new Color(255, 0, 0, 0.5);
 
         this.cSize = cSize;
@@ -321,7 +327,7 @@ class Line {
             this.color = new Color(247, 239, 0, 0.5);
         }
         this.shape.graphics.clear()
-            .setStrokeStyle(15 * (this.cSize / 650), 'round', 'round')
+            .setStrokeStyle(15 * (this.cSize / sizeRatio), 'round', 'round')
             .beginStroke(this.color.toString())
             .moveTo(this.x, this.y)
             .lineTo(this.x, this.length)
@@ -361,10 +367,10 @@ function draw() {
         cSize = ctx.canvas.width;
     }
 
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
+    for (let j = 0; j < rowNum; j++) {
+        for (let i = 0; i < colNum; i++) {
             const curr = new Circle(i, j, sounds[j]);
-            if (clicked[i + (j * 8)] === 116) {
+            if (clicked[i + j * colNum] === 116) {
                 curr.clicked = true;
             }
             circles.push(curr);
@@ -435,8 +441,8 @@ function tick(/* e */) {
                 c.played = false;
             }
         }
-        if (line.x < (560 * (cSize / 650))) {
-            line.x += speed * (cSize / 650);
+        if (line.x < (colNum * (noteMargin + noteRadius * 2) * (cSize / sizeRatio))) {
+            line.x += speed * (cSize / sizeRatio);
             line.draw();
             stage.update();
         } else {

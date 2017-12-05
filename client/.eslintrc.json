@@ -16,6 +16,8 @@
         "no-plusplus": "off",
         "no-use-before-define": [ "error", { "functions": false } ],
         "indent": [ 2, 4 ],
-        "no-restricted-syntax": "off"
+        "no-restricted-syntax": "off",
+        "max-len": "off",
+        "no-mixed-operators": "off"
     }
 }
