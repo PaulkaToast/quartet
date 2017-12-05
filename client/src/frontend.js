@@ -450,7 +450,7 @@ function tick(/* e */) {
             }
         }
         if (line.x < (colNum * (noteMargin + noteRadius * 2) * (cSize / sizeRatio))) {
-            line.x += speed * 2.5 * (cSize / sizeRatio);
+            line.x += speed * 2 * (cSize / sizeRatio);
             line.draw();
             stage.update();
         } else {
@@ -458,6 +458,15 @@ function tick(/* e */) {
         }
     }
 }
+
+function clearNotes() {
+    for (const c of circles) {
+        if (c.clicked === true) {
+            c.onClick();
+        }
+    }
+}
+window.clearNotes = clearNotes;
 
 function updateSpeed() {
     speed = Math.abs(parseFloat(tempoInput.value));

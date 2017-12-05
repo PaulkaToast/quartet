@@ -37,6 +37,11 @@
                 background-color: rgb(100,150,250);
                 border-radius: 10px 0px 0px 10px;
             }
+            #params > button {
+                margin: 0px 0px 20px 150px;
+
+            }
+
         </style>
     </head>
     <body onload="initCanvas();"
@@ -50,6 +55,8 @@
             <input type="submit" name="signout" value="Sign Out"/>
         </form>
         <div id="params">
+            <button onclick="clearNotes()">Clear</button>
+            <br>
             <label> Tempo:
                 <input id="tempo-input" type="number" name="speed" min="0" onchange="updateSpeed()" onkeypress="updateSpeed()" value="4"/>
             </label>

@@ -5640,7 +5640,7 @@ function tick() /* e */{
         }
 
         if (line.x < colNum * (noteMargin + noteRadius * 2) * (cSize / sizeRatio)) {
-            line.x += speed * 2.5 * (cSize / sizeRatio);
+            line.x += speed * 2 * (cSize / sizeRatio);
             line.draw();
             stage.update();
         } else {
@@ -5648,6 +5648,36 @@ function tick() /* e */{
         }
     }
 }
+
+function clearNotes() {
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+        for (var _iterator2 = circles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var c = _step2.value;
+
+            if (c.clicked === true) {
+                c.onClick();
+            }
+        }
+    } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+            }
+        } finally {
+            if (_didIteratorError2) {
+                throw _iteratorError2;
+            }
+        }
+    }
+}
+window.clearNotes = clearNotes;
 
 function updateSpeed() {
     speed = Math.abs(parseFloat(tempoInput.value));
