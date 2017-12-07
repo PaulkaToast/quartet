@@ -11,12 +11,12 @@ An online multi-person sequencer that you can play around with to make music
 
 ## Building the Database
 
-`./create-tables`
+`./create-tables.sh`
 
 ## Starting the Server
 
-`./run-server`
+`./run-server.sh`
 
 ## Emptying the Database
 
-`./drop-tables`
+`./drop-tables.sh`
