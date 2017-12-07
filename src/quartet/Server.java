@@ -166,7 +166,7 @@ public class Server {
         int id;
         boolean noteToggle[][] = new boolean[17][16];
         String note[] = {
-                "A3", "Bb4", "B4", "C5", "Db5", "D5", "Eb5", "E5",
+                "A4", "Bb4", "B4", "C5", "Db5", "D5", "Eb5", "E5",
                 "F5", "Gb5", "G5", "Ab5", "A5", "Bb5", "B5", "C6", "Db6"
         };
 

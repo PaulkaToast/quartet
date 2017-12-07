@@ -21,8 +21,8 @@ let tempoInput;
 
 const circles = [];
 // const sounds = ['bang', 'clap', 'ding', 'ding2', 'pop', 'shutter', 'tap', 'valve'];
-const sounds = ['A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5', 'E5', 'F5', 'Gb5', 'G5', 'Ab5', 'A5', 'Bb5', 'B5', 'C6', 'Db6'];
-const rowNum = sounds.length;
+let sounds;
+let rowNum;
 const colNum = 16;
 const synth = new Tone.PolySynth(rowNum, Tone.Synth).toMaster();
 
@@ -404,13 +404,12 @@ function initCanvas() {
             }
 
             const noteList = data[1].split(',');
-            for (let i = 0; i < noteList.length; i++) {
-                sounds[i] = noteList[i];
-            }
+            rowNum = noteList.length;
+            sounds = noteList;
 
 
             const noteInputs = document.getElementById('notes');
-            const noteNames = ['A', 'Bb', 'B', 'C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab'];
+            const noteNames = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
             for (let i = 0; i < sounds.length; i++) {
                 const noteRow = document.createElement('select');
                 noteRow.noteIndex = i;
@@ -464,7 +463,6 @@ function reInitCanvas() {
     } else {
         cSize = ctx.canvas.width;
     }
-
     draw();
 }
 window.reInitCanvas = reInitCanvas;

@@ -5143,8 +5143,8 @@ var tempoInput = void 0;
 
 var circles = [];
 // const sounds = ['bang', 'clap', 'ding', 'ding2', 'pop', 'shutter', 'tap', 'valve'];
-var sounds = ['A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5', 'E5', 'F5', 'Gb5', 'G5', 'Ab5', 'A5', 'Bb5', 'B5', 'C6', 'Db6'];
-var rowNum = sounds.length;
+var sounds = []; // ['C4', 'Db4', 'A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5', 'E5', 'F5', 'Gb5', 'G5', 'Ab5', 'A5', 'Bb5', 'B5'];
+var rowNum = void 0;
 var colNum = 16;
 var synth = new __WEBPACK_IMPORTED_MODULE_1_tone___default.a.PolySynth(rowNum, __WEBPACK_IMPORTED_MODULE_1_tone___default.a.Synth).toMaster();
 
@@ -5572,22 +5572,21 @@ function initCanvas() {
             }
 
             var noteList = data[1].split(',');
-            for (var _i = 0; _i < noteList.length; _i++) {
-                sounds[_i] = noteList[_i];
-            }
+            rowNum = noteList.length;
+            sounds = noteList;
 
             var noteInputs = document.getElementById('notes');
-            var noteNames = ['A', 'Bb', 'B', 'C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab'];
-            for (var _i2 = 0; _i2 < sounds.length; _i2++) {
+            var noteNames = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+            for (var _i = 0; _i < sounds.length; _i++) {
                 var noteRow = document.createElement('select');
-                noteRow.noteIndex = _i2;
+                noteRow.noteIndex = _i;
                 for (var n = 0; n < noteNames.length * 9; n++) {
                     var option = document.createElement('option');
                     option.value = noteNames[n % noteNames.length] + Math.floor(n / noteNames.length);
                     option.innerText = option.value;
                     noteRow.appendChild(option);
                 }
-                noteRow.value = sounds[_i2];
+                noteRow.value = sounds[_i];
                 noteRow.addEventListener('change', updateNote.bind(noteRow, noteRow));
                 noteInputs.appendChild(noteRow);
                 noteInputs.appendChild(document.createElement('br'));
@@ -5597,9 +5596,9 @@ function initCanvas() {
             stage.enableMouseOver(30);
 
             for (var j = 0; j < rowNum; j++) {
-                for (var _i3 = 0; _i3 < colNum; _i3++) {
-                    var curr = new Circle(_i3, j, j);
-                    if (clicked[_i3 + j * colNum] === 't') {
+                for (var _i2 = 0; _i2 < colNum; _i2++) {
+                    var curr = new Circle(_i2, j, j);
+                    if (clicked[_i2 + j * colNum] === 't') {
                         curr.clicked = true;
                     }
                     circles.push(curr);
@@ -5631,7 +5630,6 @@ function reInitCanvas() {
     } else {
         cSize = ctx.canvas.width;
     }
-
     draw();
 }
 window.reInitCanvas = reInitCanvas;
