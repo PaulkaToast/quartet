@@ -12,8 +12,8 @@ class SqlHelperUtils {
     static Connection conn;
 
     public static void initConnection() {
-
         try {
+            DriverManager.registerDriver(new org.apache.derby.jdbc.EmbeddedDriver());
             conn = DriverManager.getConnection("jdbc:derby:" + dbName + ";create=true");
 
             System.out.println("Connected to and created database " + dbName);

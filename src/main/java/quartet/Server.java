@@ -1,41 +1,25 @@
 package quartet;
 
-import static j2html.TagCreator.*;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import org.json.JSONObject;
-import spark.Session;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-
 
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static j2html.TagCreator.b;
-import static j2html.TagCreator.p;
-import static j2html.TagCreator.span;
-import static kotlin.reflect.jvm.internal.impl.renderer.RenderingUtilsKt.render;
-import static quartet.SqlHelperUtils.connectToDb;
-import static quartet.SqlHelperUtils.initConnection;
-import static quartet.SqlHelperUtils.pageStateTableName;
-import static spark.Spark.init;
-import static spark.Spark.staticFileLocation;
+import static j2html.TagCreator.*;
+import static quartet.SqlHelperUtils.*;
 import static spark.Spark.webSocket;
 
 public class Server {
