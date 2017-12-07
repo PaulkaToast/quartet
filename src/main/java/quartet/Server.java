@@ -1,8 +1,17 @@
 package quartet;
 
+import static j2html.TagCreator.*;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import org.json.JSONObject;
+import spark.Session;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -10,24 +19,38 @@ import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import static j2html.TagCreator.b;
+import static j2html.TagCreator.p;
+import static j2html.TagCreator.span;
+import static kotlin.reflect.jvm.internal.impl.renderer.RenderingUtilsKt.render;
 import static quartet.SqlHelperUtils.connectToDb;
 import static quartet.SqlHelperUtils.initConnection;
 import static quartet.SqlHelperUtils.pageStateTableName;
+import static spark.Spark.init;
+import static spark.Spark.staticFileLocation;
+import static spark.Spark.webSocket;
 
 public class Server {
 
     public static List<PageState> pageStateList = new ArrayList<>();
     public static Map<String, UserSession> sessionList = new HashMap<>();
+    public static Map<org.eclipse.jetty.websocket.api.Session, String> userUsernameMap = new ConcurrentHashMap<>(); //this needs to be thread safe
+    static int nextUserNumber = 1; //use this for creating next username
 
     public static void main(String[] args) throws Exception {
         // Intialize server on an unused port
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-
+        HttpServer server = HttpServer.create(new InetSocketAddress(6060), 0);
+        //staticFileLocation("/web");
+        webSocket("/quartet", ChatWebSocketHandler.class);
+        //init();
         // Initialize connection to database (connection cannot be established more than once)
         initConnection();
 
@@ -51,6 +74,25 @@ public class Server {
         server.createContext("/state", new PageStateHandler());
         server.setExecutor(null);
         server.start();
+    }
+
+    public static void broadcastMessage(String sender, String message){
+        userUsernameMap.keySet().stream().filter(org.eclipse.jetty.websocket.api.Session::isOpen).forEach(session -> {
+            try{
+                session.getRemote().sendString(String.valueOf(new JSONObject()
+                .put("userMessage", createHtmlMesssageFromSender(sender, message))
+                .put("userlist", userUsernameMap.values())
+                ));
+            } catch (Exception e) {
+                    e.printStackTrace();
+            }
+        });
+    }
+
+    public static String createHtmlMesssageFromSender(String sender, String message) {
+            return article().with(b(sender + " says: "),
+            p(message),
+        span().withClass("timestamp").withText(new SimpleDateFormat("HH:mm:ss").format(new Date()))).render();
     }
 
     public static Map<String, String> parseQuery(String query) throws UnsupportedEncodingException {

@@ -1,4 +1,6 @@
 #!/bin/bash
 
-./compile.sh
-java -cp ./out:./derby.jar quartet.CreateTables
+#./compile.sh
+mvn install
+#iquartet/target/quartet-1.0-SNAPSHOT.jar
+java -cp ./target:./quartet-1.0-SNAPSHOT.jar quartet.CreateTables
